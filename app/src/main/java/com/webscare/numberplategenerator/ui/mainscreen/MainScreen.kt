@@ -22,20 +22,25 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.webscare.numberplategenerator.ui.components.AppFloatingActionButton
 import com.webscare.numberplategenerator.ui.components.FloatingBottomBar
+import com.webscare.numberplategenerator.ui.navigation.BottomNavConfig
 import com.webscare.numberplategenerator.ui.navigation.Screen
 import com.webscare.numberplategenerator.ui.navigation.appNavigation
 
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
     Box(modifier = Modifier.fillMaxSize()) {
         NavHost(
             navController = navController,
@@ -49,13 +54,17 @@ fun MainScreen() {
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 24.dp)
         ) {
-            FloatingBottomBar(onNavigate = { route ->
-                navController.navigate(route) {
-                    popUpTo(navController.graph.startDestinationId) { saveState = true }
-                    launchSingleTop = true
-                    restoreState = true
+            FloatingBottomBar(
+                currentRoute = currentRoute,
+                items = BottomNavConfig.items,
+                onNavigate = { route ->
+                    navController.navigate(route) {
+                        popUpTo(navController.graph.startDestinationId) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
-            })
+            )
         }
         AppFloatingActionButton(
             onClick = { /* ViewModel logic here */ },

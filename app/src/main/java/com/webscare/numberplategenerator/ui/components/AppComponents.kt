@@ -1,5 +1,6 @@
 package com.webscare.numberplategenerator.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -23,40 +24,55 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.webscare.numberplategenerator.R
+import com.webscare.numberplategenerator.ui.navigation.BottomNavItem
 import com.webscare.numberplategenerator.ui.navigation.Screen
+import com.webscare.numberplategenerator.ui.theme.grey_color
+import com.webscare.numberplategenerator.ui.theme.pink_color
+import com.webscare.numberplategenerator.ui.theme.white_color
+
+
 
 @Composable
-fun FloatingBottomBar(onNavigate: (String) -> Unit) {
+fun FloatingBottomBar(currentRoute: String?,
+                      items: List<BottomNavItem>,
+                      onNavigate: (String) -> Unit) {
     Surface(
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp)
             .fillMaxWidth(),
-        shape = RoundedCornerShape(40),
-        color = Color.White,
+        color = white_color.copy(alpha = 0.9f),
+        shape = RoundedCornerShape(40.dp),
         shadowElevation = 8.dp
     ) {
         Row(
-            modifier = Modifier.padding(20.dp),
+            modifier = Modifier.padding(vertical = 12.dp).background(Color.Transparent),
             horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = { onNavigate(Screen.Home.route) }) {
-                Icon(Icons.Default.Home, contentDescription = "Home")
-            }
-            IconButton(onClick = { onNavigate(Screen.Explore.route) }) {
-                Icon(Icons.Default.List, contentDescription = "Explore")
-            }
-            Spacer(modifier = Modifier.width(48.dp))
-            IconButton(onClick = { onNavigate(Screen.History.route) }) {
-                Icon(Icons.Default.DateRange, contentDescription = "History")
-            }
-            IconButton(onClick = { onNavigate(Screen.Settings.route) }) {
-                Icon(Icons.Default.Settings, contentDescription = "Settings")
+            verticalAlignment = Alignment.CenterVertically,
+
+            ) {
+            items.forEachIndexed { index, item ->
+                // FAB ke liye beech mein space
+                if (index == 2) {
+                    Spacer(modifier = Modifier.width(48.dp))
+                }
+
+                IconButton(onClick = { onNavigate(item.route) }) {
+                    Icon(
+                        painter = painterResource(id = item.iconResId),
+                        contentDescription = item.label,
+                        // Active route check logic
+                        tint = if (currentRoute == item.route) pink_color else grey_color
+                    )
+                }
             }
         }
     }
 }
+
 @Composable
 fun AppFloatingActionButton(
     onClick: () -> Unit,

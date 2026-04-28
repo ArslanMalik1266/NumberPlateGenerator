@@ -34,6 +34,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.webscare.numberplategenerator.ui.mainscreen.MainScreen
@@ -45,6 +48,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        hideSystemUI()
         setContent {
             val navController = rememberNavController()
             NumberPlateGeneratorTheme {
@@ -52,5 +56,13 @@ class MainActivity : ComponentActivity() {
 
             }
         }
+    }
+    private fun hideSystemUI() {
+        val controller = WindowCompat.getInsetsController(window, window.decorView)
+
+        // System bars ko swipe se wapas lane ke liye behavior set karein
+        controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
+        controller.hide(WindowInsetsCompat.Type.navigationBars())
     }
 }
