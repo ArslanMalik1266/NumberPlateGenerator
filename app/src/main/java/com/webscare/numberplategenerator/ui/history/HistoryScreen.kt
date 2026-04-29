@@ -155,7 +155,6 @@ fun HistoryItemRow(
             modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // 1. Box with Image
             Box(
                 modifier = Modifier.weight(0.5f)
                     .size(80.dp)
@@ -174,9 +173,10 @@ fun HistoryItemRow(
 
             // 2. Column with 3 Texts
             Column(modifier = Modifier.weight(0.35f)) {
-                Text(text = plateNumber, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = black_color)
-                Text(text = time, fontSize = 12.sp, color = grey_color)
-                Text(text = userName, fontSize = 12.sp, color = grey_color)
+                Text(text = plateNumber, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = black_color,
+                    lineHeight = 14.sp)
+                Text(text = time, fontSize = 12.sp, color = grey_color, lineHeight = 12.sp)
+                Text(text = userName, fontSize = 12.sp, color = grey_color,  lineHeight = 12.sp)
             }
 
             Column(

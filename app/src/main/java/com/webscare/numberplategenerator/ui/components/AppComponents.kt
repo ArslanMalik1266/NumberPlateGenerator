@@ -40,6 +40,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -62,14 +63,22 @@ fun FloatingBottomBar(
     currentRoute: String?,
     items: List<BottomNavItem>,
     onNavigate: (String) -> Unit
-) {
+)
+{
     Surface(
         modifier = Modifier
             .padding(horizontal = 16.dp)
-            .fillMaxWidth(),
-        color = white_color.copy(alpha = 0.9f),
+            .fillMaxWidth()
+            .border(
+                width = 1.dp,
+                brush = Brush.verticalGradient(
+                    colors = listOf(Color.White.copy(0.4f), Color.White.copy(0.1f))
+                ),
+                shape = RoundedCornerShape(40.dp)
+            ),
+        color = white_color.copy(alpha = 0.6f),
         shape = RoundedCornerShape(40.dp),
-        shadowElevation = 8.dp
+        shadowElevation = 12.dp
     ) {
         Row(
             modifier = Modifier
@@ -89,7 +98,6 @@ fun FloatingBottomBar(
                     Icon(
                         painter = painterResource(id = item.iconResId),
                         contentDescription = item.label,
-                        // Active route check logic
                         tint = if (currentRoute == item.route) pink_color else grey_color
                     )
                 }
@@ -137,19 +145,22 @@ fun GenericTitleSection(
             text = title,
             fontSize = 14.sp,
             fontWeight = FontWeight.Normal,
-            color = grey_color
+            color = grey_color,
+            lineHeight = 14.sp
         )
         Text(
             text = subtitle,
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
-            color = black_color
+            color = black_color,
+            lineHeight = 32.sp
         )
         Text(
             text = description,
             fontSize = 14.sp,
             fontWeight = FontWeight.Normal,
-            color = grey_color
+            color = grey_color,
+            lineHeight = 14.sp
         )
     }
 }
@@ -252,12 +263,14 @@ fun TemplateCard(
                 text = template.title,
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
-                color = black_color
+                color = black_color,
+                lineHeight = 14.sp
             )
             Text(
                 text = template.description,
                 fontSize = 10.sp,
-                color = grey_color
+                color = grey_color,
+                lineHeight = 10.sp
             )
         }
     }

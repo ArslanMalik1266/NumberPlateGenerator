@@ -169,7 +169,7 @@ fun Header(onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 24.dp, end = 24.dp, top = 14.dp),
-        verticalAlignment = Alignment.Top,
+        verticalAlignment = Alignment.CenterVertically,
     )
     {
         Box(
@@ -183,7 +183,7 @@ fun Header(onClick: () -> Unit) {
         ) {
             Text(
                 text = "NP",
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = white_color,
                 textAlign = TextAlign.Start,
@@ -196,7 +196,7 @@ fun Header(onClick: () -> Unit) {
         ) {
             Text(
                 text = "NUMBER PLATE",
-                fontSize = 14.sp,
+                fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
                 color = white_color,
                 textAlign = TextAlign.Start,
@@ -208,7 +208,7 @@ fun Header(onClick: () -> Unit) {
                 fontWeight = FontWeight.Bold,
                 color = white_color,
                 textAlign = TextAlign.Start,
-                lineHeight = 18.sp
+                lineHeight = 16.sp
             )
 
         }
@@ -224,7 +224,7 @@ fun Header(onClick: () -> Unit) {
             Image(
                 painter = painterResource(R.drawable.notification_bell),
                 contentDescription = "",
-                modifier = Modifier.size(20.dp))
+                modifier = Modifier.size(18.dp))
 
         }
     }
@@ -272,7 +272,7 @@ fun HomeHeaderSection(
                 // 2. Main Hero Text (Header ke neeche)
                 Column(
                     modifier = Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
                         text = "Design your perfect plate",
@@ -283,11 +283,11 @@ fun HomeHeaderSection(
                     )
                     Text(
                         text = "Pakistan-style number plates, customized your way.",
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color.White.copy(alpha = 0.8f), // Thoda transparent (looks premium)
                         modifier = Modifier.padding(top = 8.dp),
-                        lineHeight = 16.sp
+                        lineHeight = 14.sp
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Row(
@@ -335,13 +335,13 @@ fun HomeHeaderSection(
                             Text(
                                 text = "AI Generation",
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp,
+                                fontSize = 16.sp,
                                 color = black_color,
                                 lineHeight = 18.sp
                             )
                             Text(
                                 text = "Pick a photo to auto-detect your plate",
-                                fontSize = 14.sp,
+                                fontSize = 12.sp,
                                 color = grey_color,
                                 lineHeight = 14.sp
                             )
@@ -380,7 +380,7 @@ fun SectionHeader(
     ) {
         Text(
             text = title,
-            fontSize = 20.sp,
+            fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
             color = Color.Black
