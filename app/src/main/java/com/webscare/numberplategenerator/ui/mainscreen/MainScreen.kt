@@ -47,7 +47,7 @@ fun MainScreen() {
             startDestination = Screen.Home.route,
             modifier = Modifier.fillMaxSize()
         ) {
-            appNavigation()
+            appNavigation(navController)
         }
         Box(
             modifier = Modifier

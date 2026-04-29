@@ -19,9 +19,25 @@ class MainViewModel(
     private val _recents = MutableStateFlow<List<RecentPlate>>(emptyList())
     val recents = _recents.asStateFlow()
 
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery = _searchQuery.asStateFlow()
+    private val _selectedFilterId = MutableStateFlow("1")
+    val selectedFilterId = _selectedFilterId.asStateFlow()
+
     init {
         loadTemplates()
         loadRecents()
+    }
+
+    fun onFilterSelected(id: String) {
+        _selectedFilterId.value = id
+        // Yahan aap logic laga sakte hain:
+        // Agar "Car" select hua, to filtered list update karein
+    }
+
+    fun onSearchQueryChange(newQuery: String) {
+        _searchQuery.value = newQuery
+        // Yahan aap trigger kar sakte hain -> searchRepository.search(newQuery)
     }
     private fun loadTemplates() {
         viewModelScope.launch {

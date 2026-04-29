@@ -258,7 +258,7 @@ fun HomeHeaderSection(
                 .wrapContentHeight()
                 .background(
                     brush = gradientBrush
-                )
+                ).padding(top = 40.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -266,7 +266,6 @@ fun HomeHeaderSection(
                     .wrapContentHeight()
                     .padding(bottom = 40.dp),
             ) {
-               Spacer(modifier = Modifier.height(40.dp))
                 // 1. Header (Already exists)
                 Header(onClick = onNotificationClick)
 
@@ -278,7 +277,7 @@ fun HomeHeaderSection(
                     Text(
                         text = "Design your perfect plate",
                         fontSize = 32.sp,
-                        fontWeight = FontWeight.ExtraBold,
+                        fontWeight = FontWeight.Bold,
                         color = Color.White,
                         lineHeight = 32.sp
                     )
