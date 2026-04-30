@@ -41,6 +41,7 @@ fun MainScreen() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val isEditorScreen = currentRoute == Screen.Editor.route
     Box(modifier = Modifier.fillMaxSize()) {
         NavHost(
             navController = navController,
@@ -52,26 +53,30 @@ fun MainScreen() {
         Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 24.dp)
+
         ) {
-            FloatingBottomBar(
-                currentRoute = currentRoute,
-                items = BottomNavConfig.items,
-                onNavigate = { route ->
-                    navController.navigate(route) {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
+            if (!isEditorScreen) {
+                FloatingBottomBar(
+                    currentRoute = currentRoute,
+                    items = BottomNavConfig.items,
+                    onNavigate = { route ->
+                        navController.navigate(route) {
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
-                }
-            )
+                )
+                AppFloatingActionButton(
+                    onClick = { navController.navigate(Screen.Editor.route) },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 60.dp)
+                )
+            }
+
+
         }
-        AppFloatingActionButton(
-            onClick = { /* ViewModel logic here */ },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 60.dp)
-        )
     }
 }
 

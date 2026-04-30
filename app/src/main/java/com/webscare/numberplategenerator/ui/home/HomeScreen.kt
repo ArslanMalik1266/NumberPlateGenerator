@@ -164,7 +164,8 @@ fun TemplateCard(template: PlateTemplate) {
 }
 
 @Composable
-fun Header(onClick: () -> Unit) {
+fun Header(onClick: () -> Unit)
+{
     Row(
         modifier = Modifier
             .fillMaxWidth()

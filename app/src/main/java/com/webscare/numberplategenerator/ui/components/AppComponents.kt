@@ -110,7 +110,8 @@ fun FloatingBottomBar(
 fun AppFloatingActionButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
-) {
+)
+{
     FloatingActionButton(
         onClick = onClick,
         shape = CircleShape,
