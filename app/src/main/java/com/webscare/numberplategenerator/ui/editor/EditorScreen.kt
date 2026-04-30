@@ -21,17 +21,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.webscare.numberplategenerator.R
+import com.webscare.numberplategenerator.domain.model.EditorTabType
+import com.webscare.numberplategenerator.domain.model.ToolState
 import com.webscare.numberplategenerator.ui.MainViewModel
-import com.webscare.numberplategenerator.ui.theme.bg_color
+import com.webscare.numberplategenerator.ui.editor.panals.StyleEditPanel
+import com.webscare.numberplategenerator.ui.editor.panals.TextEditPanel
 import com.webscare.numberplategenerator.ui.theme.black_color
 import com.webscare.numberplategenerator.ui.theme.grey_color
 import com.webscare.numberplategenerator.ui.theme.white_color
@@ -42,8 +42,8 @@ import org.koin.androidx.compose.koinViewModel
 fun EditorScreen (
     viewModel: MainViewModel = koinViewModel()
 ){
-    val selectedTabId by viewModel.selectedTabId.collectAsState()
-Column(
+    val state by viewModel.uiState.collectAsState()
+    Column(
     modifier = Modifier
         .fillMaxSize()
         .background(white_color)
@@ -54,9 +54,22 @@ Column(
     Spacer(modifier = Modifier.height(8.dp))
     EditorTabsBar(
         tabs = viewModel.editorTabs,
-        selectedTabId = selectedTabId,
+        selectedTabId = state.selectedTab,
         onTabSelected = { id -> viewModel.onTabSelected(id) }
     )
+    Spacer(modifier = Modifier.height(8.dp))
+    EditorPanelContainer(modifier = Modifier.weight(1f)) {
+        when (state.selectedTab) {
+            EditorTabType.TEXT -> {
+                TextEditPanel(viewModel = viewModel)
+            }
+            EditorTabType.STYLE -> { StyleEditPanel(viewModel = viewModel) }
+            EditorTabType.BACKGROUND -> { /* BGPanel() */ }
+            EditorTabType.FLAG -> { /* FlagPanel() */ }
+
+            else -> { /* Default case */ }
+        }
+    }
 }
 }
 
@@ -90,7 +103,8 @@ fun EditorHeader()
 
         }
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
                 .padding(start = 8.dp, end = 8.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -109,8 +123,10 @@ fun EditorHeader()
             modifier = Modifier
                 .size(40.dp)
                 .addPressEffect() { }
-                .background(grey_color.copy(alpha = 0.2f),
-                    shape = RoundedCornerShape(12.dp))
+                .background(
+                    grey_color.copy(alpha = 0.2f),
+                    shape = RoundedCornerShape(12.dp)
+                )
             ,
             contentAlignment = Alignment.Center
         ) {
@@ -128,8 +144,10 @@ fun EditorHeader()
             modifier = Modifier
                 .size(40.dp)
                 .addPressEffect() { }
-                .background(grey_color.copy(alpha = 0.2f),
-                    shape = RoundedCornerShape(12.dp))
+                .background(
+                    grey_color.copy(alpha = 0.2f),
+                    shape = RoundedCornerShape(12.dp)
+                )
             ,
             contentAlignment = Alignment.Center
         ) {

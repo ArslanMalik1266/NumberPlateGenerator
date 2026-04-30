@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.webscare.numberplategenerator.ui.theme.bg_color
 import com.webscare.numberplategenerator.ui.theme.grey_color
 
 @Composable
@@ -25,7 +26,7 @@ fun PlatePreviewContainer(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(Color(0xFFF5F5F2))
+            .background(bg_color)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center

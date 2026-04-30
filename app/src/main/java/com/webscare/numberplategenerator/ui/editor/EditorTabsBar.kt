@@ -26,13 +26,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.webscare.numberplategenerator.R
+import com.webscare.numberplategenerator.domain.model.EditorTabType
 import com.webscare.numberplategenerator.ui.theme.pink_color
 
 @Composable
 fun EditorTabsBar(
     tabs: List<EditorTab>,
-    selectedTabId: String,
-    onTabSelected: (String) -> Unit
+    selectedTabId: EditorTabType,
+    onTabSelected: (EditorTabType) -> Unit
 ) {
 
 

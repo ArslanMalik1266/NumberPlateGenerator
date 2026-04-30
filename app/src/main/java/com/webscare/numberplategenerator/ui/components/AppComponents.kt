@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +41,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -48,6 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.webscare.numberplategenerator.R
+import com.webscare.numberplategenerator.domain.model.FontOption
 import com.webscare.numberplategenerator.domain.model.PlateTemplate
 import com.webscare.numberplategenerator.ui.navigation.BottomNavItem
 import com.webscare.numberplategenerator.ui.navigation.Screen
@@ -63,8 +66,7 @@ fun FloatingBottomBar(
     currentRoute: String?,
     items: List<BottomNavItem>,
     onNavigate: (String) -> Unit
-)
-{
+) {
     Surface(
         modifier = Modifier
             .padding(horizontal = 16.dp)
@@ -110,8 +112,7 @@ fun FloatingBottomBar(
 fun AppFloatingActionButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
-)
-{
+) {
     FloatingActionButton(
         onClick = onClick,
         shape = CircleShape,
@@ -204,6 +205,43 @@ fun CustomFilterChip(
                 fontWeight = FontWeight.Medium
             )
         }
+    }
+}
+
+@Composable
+fun FontCard(
+    font: FontOption,
+    isSelected: Boolean,
+    modifier: Modifier = Modifier,
+    onSelect: () -> Unit
+) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(16.dp))
+            .background(if (isSelected) pink_color.copy(0.05f) else white_color)
+            .border(
+                width = if (isSelected) 2.dp else 1.dp,
+                color = if (isSelected) pink_color else grey_color.copy(0.15f),
+                shape = RoundedCornerShape(16.dp)
+            )
+            .clickable { onSelect() }
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = font.name,
+            fontSize = 10.sp,
+            color = if (isSelected) black_color.copy(0.6f) else grey_color,
+            fontWeight = FontWeight.Medium,
+            lineHeight = 10.sp
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        Image(
+            painter = painterResource(font.previewImage),
+            contentDescription = "",
+            modifier = Modifier
+                .padding(8.dp)
+        )
     }
 }
 
