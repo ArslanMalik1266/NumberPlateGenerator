@@ -77,8 +77,7 @@ fun HomeScreen(
     viewModel : MainViewModel = koinViewModel(),
     onNotificationClick: () -> Unit = {},
 ) {
-    val templates by viewModel.templates.collectAsState()
-    val recents by viewModel.recents.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
     LazyColumn(
         modifier = Modifier
@@ -91,11 +90,11 @@ fun HomeScreen(
         }
         item {
             SectionHeader(title = "Browse templates", onSeeAllClick = { /* Handle nav */ })
-            TemplateHorizontalList(templates = templates)
+            TemplateHorizontalList(templates = uiState.templates)
         }
         item {
             SectionHeader(title = "Recents", onSeeAllClick = { /* Handle nav */ })
-            RecentHorizontalList(recents = recents)
+            RecentHorizontalList(recents = uiState.recents)
         }
 
         item { Spacer(modifier = Modifier.height(100.dp)) }

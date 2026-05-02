@@ -1,5 +1,8 @@
 package com.webscare.numberplategenerator.ui.components
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,6 +17,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,6 +30,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
@@ -39,16 +44,19 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.webscare.numberplategenerator.R
 import com.webscare.numberplategenerator.domain.model.FontOption
 import com.webscare.numberplategenerator.domain.model.PlateTemplate
@@ -109,25 +117,137 @@ fun FloatingBottomBar(
 }
 
 @Composable
-fun AppFloatingActionButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
+fun MainFabToggle(
+    isExpanded: Boolean,
+    onClick: () -> Unit
 ) {
-    FloatingActionButton(
-        onClick = onClick,
-        shape = CircleShape,
-        containerColor = Color.Red,
-        modifier = modifier.border(
-            width = 2.dp,
-            color = Color.White,
-            shape = CircleShape
-        )
+    // 1. Rotation angle calculate karein (0 se 45 degree tak)
+    val rotation by animateFloatAsState(
+        targetValue = if (isExpanded) 45f else 0f,
+        animationSpec = tween(durationMillis = 300),
+        label = "FabRotation"
+    )
+
+    Box(
+        modifier = Modifier
+            .size(64.dp)
+            .background(
+                brush = Brush.linearGradient(
+                    colors = listOf(Color(0xFFF05151), Color(0xFFFF7E5F))
+                ),
+                shape = CircleShape
+            )
+            .clip(CircleShape)
+            .clickable { onClick() }
+            .border(4.dp, Color.White, CircleShape),
+        contentAlignment = Alignment.Center
     ) {
         Icon(
             imageVector = Icons.Default.Add,
-            contentDescription = "Add",
-            tint = Color.White
+            contentDescription = null,
+            tint = Color.White,
+            modifier = Modifier
+                .size(32.dp)
+                .graphicsLayer {
+                    rotationZ = rotation
+                }
         )
+    }
+}
+
+@Composable
+fun FabOptionItem(
+    icon: Int,
+    label: String,
+    onClick: () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Surface(
+            modifier = Modifier.size(56.dp),
+            shape = CircleShape,
+            color = Color.White,
+            shadowElevation = 4.dp
+        ) {
+            Box(
+                modifier = Modifier.clickable { onClick() },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = icon),
+                    contentDescription = label,
+                    tint = pink_color,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+        }
+
+        Surface(
+            color = Color(0xFF333333),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Text(
+                text = label,
+                color = Color.White,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun ExpandableFabMenu(
+    isExpanded: Boolean,
+    onToggle: () -> Unit,
+    onBikeClick: () -> Unit,
+    onCarClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val bikeOffset by animateDpAsState(
+        targetValue = if (isExpanded) (-80).dp else 0.dp,
+        animationSpec = tween(durationMillis = 300)
+    )
+    val carOffset by animateDpAsState(
+        targetValue = if (isExpanded) (-80).dp else 0.dp,
+        animationSpec = tween(durationMillis = 300)
+    )
+    val sideOffset by animateDpAsState(
+        targetValue = if (isExpanded) 60.dp else 0.dp,
+        animationSpec = tween(durationMillis = 300)
+    )
+
+    val alpha by animateFloatAsState(
+        targetValue = if (isExpanded) 1f else 0f,
+        animationSpec = tween(durationMillis = 200)
+    )
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Box(
+            modifier = Modifier
+                .offset(x = -sideOffset, y = bikeOffset)
+                .graphicsLayer { this.alpha = alpha }
+        ) {
+            if (isExpanded || alpha > 0f) {
+                FabOptionItem(icon = R.drawable.ic_motorbike, label = "Bike", onClick = onBikeClick)
+            }
+        }
+        Box(
+            modifier = Modifier
+                .offset(x = sideOffset, y = carOffset)
+                .graphicsLayer { this.alpha = alpha }
+        ) {
+            if (isExpanded || alpha > 0f) {
+                FabOptionItem(icon = R.drawable.ic_car, label = "Car", onClick = onCarClick)
+            }
+        }
+
+        MainFabToggle(isExpanded = isExpanded, onClick = onToggle)
     }
 }
 
@@ -236,11 +356,16 @@ fun FontCard(
             lineHeight = 10.sp
         )
         Spacer(modifier = Modifier.height(6.dp))
-        Image(
-            painter = painterResource(font.previewImage),
-            contentDescription = "",
+
+        AsyncImage(
+            model = font.previewImage,
+            contentDescription = font.name,
             modifier = Modifier
-                .padding(8.dp)
+                .fillMaxWidth()
+                .height(60.dp)
+                .padding(4.dp),
+            placeholder = painterResource(R.drawable.number_plate_placeholder), // Loading image
+            error = painterResource(R.drawable.number_plate_placeholder)      // Error image
         )
     }
 }

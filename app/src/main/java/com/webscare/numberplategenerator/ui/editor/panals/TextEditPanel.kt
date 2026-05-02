@@ -26,7 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.webscare.numberplategenerator.domain.model.EditorTabType
-import com.webscare.numberplategenerator.domain.model.ToolState
+import com.webscare.numberplategenerator.ui.ToolState
 import com.webscare.numberplategenerator.ui.MainViewModel
 import com.webscare.numberplategenerator.ui.components.FontCard
 import com.webscare.numberplategenerator.ui.theme.black_color
@@ -38,7 +38,7 @@ import org.koin.androidx.compose.koinViewModel
 fun TextEditPanel(
     viewModel: MainViewModel = koinViewModel()
 ) {
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.editorState.collectAsState()
     val textState = state.toolStates[EditorTabType.TEXT] as? ToolState.TextState
     val fonts = textState?.fontOptions ?: emptyList()
     val selectedId = textState?.selectedFontId ?: "1"
@@ -103,7 +103,6 @@ fun TextEditPanel(
             ) {
                 row.forEach { font ->
                     FontCard(
-                        // Urdu font ke liye hardcoded text rehne dein, baaki dynamic
                         font = if (font.id == "6") font.copy(name = "Urdu Font") else font,
                         isSelected = font.id == selectedId,
                         modifier = Modifier.weight(1f),

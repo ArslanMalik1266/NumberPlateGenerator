@@ -56,9 +56,7 @@ fun ExploreScreen(
     onBackClick: () -> Unit,
     viewModel: MainViewModel = koinViewModel()
 ) {
-    val searchQuery by viewModel.searchQuery.collectAsState()
-    val selectedFilterId by viewModel.selectedFilterId.collectAsState()
-    val templates by viewModel.templates.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     val filterTabs = listOf(
         FilterTabItem("1", "All", R.drawable.ic_grid),
         FilterTabItem("2", "Car", R.drawable.ic_car),
@@ -80,20 +78,20 @@ fun ExploreScreen(
                     GenericTitleSection(
                         title = "GALLERY",
                         subtitle = "Browse templates",
-                        description = "${templates.size} designs"
+                        description = "${uiState.templates.size} designs"
                     )
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
                 SearchBar(
-                    query = searchQuery,
+                    query = uiState.searchQuery,
                     onQueryChange = { viewModel.onSearchQueryChange(it) }
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
                 GenericFilterRow(
                     items = filterTabs,
-                    selectedId = selectedFilterId,
+                    selectedId = uiState.selectedFilterId,
                     onItemSelected = { viewModel.onFilterSelected(it.id) }
                 )
                 Spacer(modifier = Modifier.height(24.dp))
@@ -101,7 +99,7 @@ fun ExploreScreen(
         }
 
 
-        items(templates) { template ->
+        items(uiState.templates) { template ->
             TemplateCard(template = template)
         }
 

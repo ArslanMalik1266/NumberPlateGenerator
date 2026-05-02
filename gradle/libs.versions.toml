@@ -9,6 +9,9 @@ activityCompose = "1.13.0"
 kotlin = "2.2.10"
 composeBom = "2026.02.01"
 koin = "4.2.1"
+coil = "2.6.0"
+retrofit = "2.11.0"
+okhttp = "4.12.0"
 material-icons-extended = "1.6.7"
 navigationCompose = "2.8.0-beta02"
 foundation = "1.11.0"
@@ -36,6 +39,18 @@ androidx-compose-material-icons-extended = { group = "androidx.compose.material"
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "runtime" }
+# Retrofit
+retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+
+# OkHttp
+okhttp-core = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+
+[bundles]
+network = ["retrofit-core", "retrofit-gson", "okhttp-core", "okhttp-logging"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

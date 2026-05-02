@@ -52,8 +52,8 @@ fun HistoryScreen(
     onBackClick: () -> Unit,
     viewModel: MainViewModel = koinViewModel()
 ) {
-    val recents by viewModel.recents.collectAsState()
-    val selectedFilterId by viewModel.selectedFilterId.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
+
     val filterTabs = listOf(
         FilterTabItem("1", "All", R.drawable.ic_grid),
         FilterTabItem("2", "Car", R.drawable.ic_car),
@@ -74,7 +74,7 @@ fun HistoryScreen(
                     GenericTitleSection(
                         title = "MY PLATES",
                         subtitle = "Recents",
-                        description = "${recents.size} designs"
+                        description = "${uiState.recents.size} designs"
                     )
                 }
             }
@@ -83,13 +83,13 @@ fun HistoryScreen(
             Spacer(modifier = Modifier.height(12.dp))
             GenericFilterRow(
                 items = filterTabs,
-                selectedId = selectedFilterId,
+                selectedId = uiState.selectedFilterId,
                 onItemSelected = { viewModel.onFilterSelected(it.id) }
             )
             Spacer(modifier = Modifier.height(24.dp))
         }
-        items(recents.size) { index ->
-            val recent = recents[index]
+        items(uiState.recents.size) { index ->
+            val recent = uiState.recents[index]
 
             HistoryItemRow(
                 plateNumber = recent.plateNumber,

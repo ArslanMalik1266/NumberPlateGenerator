@@ -1,8 +1,10 @@
-package com.webscare.numberplategenerator.domain.model
+package com.webscare.numberplategenerator.ui
 
-import android.graphics.Color
+import com.webscare.numberplategenerator.domain.model.EditorTabType
+import com.webscare.numberplategenerator.domain.model.FontOption
 
 data class EditorStates(
+    val plateType: PlateType = PlateType.CAR,
     val plateText: String = "LEB-2847",
     val selectedTab: EditorTabType = EditorTabType.TEXT,
     val toolStates: Map<EditorTabType, ToolState> = mapOf(
@@ -23,4 +25,8 @@ sealed class ToolState {
         val isUnderline: Boolean = false,
         val selectedColor: Int = 0xFF000000.toInt(),
     ) : ToolState()
+}
+
+enum class PlateType {
+    CAR, BIKE
 }

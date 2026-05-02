@@ -1,26 +1,38 @@
 package com.webscare.numberplategenerator.ui.editor
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.webscare.numberplategenerator.ui.EditorStates
+import com.webscare.numberplategenerator.ui.PlateType
 import com.webscare.numberplategenerator.ui.theme.bg_color
 import com.webscare.numberplategenerator.ui.theme.grey_color
 
 @Composable
 fun PlatePreviewContainer(
+    state: EditorStates,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -31,16 +43,36 @@ fun PlatePreviewContainer(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Box(
-            modifier = Modifier
-                .padding(horizontal = 24.dp)
-                .fillMaxWidth()
-                .height(250.dp)
-                .background(Color.White, RoundedCornerShape(8.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("Plate Preview Area", color = grey_color, fontSize = 18.sp)
+        val aspectRatio = when (state.plateType) {
+            PlateType.BIKE -> 1.33f // More "square" for bikes (240x180)
+            PlateType.CAR -> 3.27f  // Long and thin for cars (360x110)
         }
 
+        Surface(
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .heightIn(150.dp)
+                .fillMaxWidth()
+                .aspectRatio(aspectRatio),
+            shape = RoundedCornerShape(16.dp),
+            color = Color.White,
+            shadowElevation = 8.dp
+        ) {
+            // Use a Box to layer the Text over the Canvas
+            Box(contentAlignment = Alignment.Center) {
+                Canvas(modifier = Modifier.fillMaxSize()) {
+                    // Empty for now
+                }
+
+                // Displaying the text from state
+                Text(
+                    text = state.plateText,
+                    fontSize = if (state.plateType == PlateType.BIKE) 32.sp else 45.sp,
+                    color = Color.Black,
+                    letterSpacing = 2.sp
+                )
+
+            }
+        }
     }
 }

@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.webscare.numberplategenerator.data.datasource.StyleDataProvider
 import com.webscare.numberplategenerator.domain.model.EditorTabType
-import com.webscare.numberplategenerator.domain.model.ToolState
+import com.webscare.numberplategenerator.ui.ToolState
 import com.webscare.numberplategenerator.ui.MainViewModel
 import com.webscare.numberplategenerator.ui.theme.black_color
 import com.webscare.numberplategenerator.ui.theme.grey_color
@@ -33,7 +33,7 @@ import org.koin.androidx.compose.koinViewModel
 fun StyleEditPanel(
     viewModel: MainViewModel = koinViewModel()
 ) {
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.editorState.collectAsState()
     val styleState = state.toolStates[EditorTabType.STYLE] as? ToolState.StyleState
         ?: ToolState.StyleState()
 

@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.webscare.numberplategenerator.R
 import com.webscare.numberplategenerator.domain.model.EditorTabType
-import com.webscare.numberplategenerator.domain.model.ToolState
 import com.webscare.numberplategenerator.ui.MainViewModel
 import com.webscare.numberplategenerator.ui.editor.panals.StyleEditPanel
 import com.webscare.numberplategenerator.ui.editor.panals.TextEditPanel
@@ -37,12 +36,13 @@ import com.webscare.numberplategenerator.ui.theme.grey_color
 import com.webscare.numberplategenerator.ui.theme.white_color
 import com.webscare.numberplategenerator.utils.addPressEffect
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 @Composable
 fun EditorScreen (
-    viewModel: MainViewModel = koinViewModel()
+    viewModel: MainViewModel = koinActivityViewModel()
 ){
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.editorState.collectAsState()
     Column(
     modifier = Modifier
         .fillMaxSize()
@@ -50,7 +50,8 @@ fun EditorScreen (
 ) {
     EditorHeader()
     Spacer(modifier = Modifier.height(12.dp))
-    PlatePreviewContainer()
+    PlatePreviewContainer(state = state
+    )
     Spacer(modifier = Modifier.height(8.dp))
     EditorTabsBar(
         tabs = viewModel.editorTabs,
