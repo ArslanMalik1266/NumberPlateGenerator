@@ -338,7 +338,7 @@ fun FontCard(
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
-            .background(if (isSelected) pink_color.copy(0.05f) else white_color)
+                .background(if (isSelected) pink_color.copy(0.05f) else white_color)
             .border(
                 width = if (isSelected) 2.dp else 1.dp,
                 color = if (isSelected) pink_color else grey_color.copy(0.15f),

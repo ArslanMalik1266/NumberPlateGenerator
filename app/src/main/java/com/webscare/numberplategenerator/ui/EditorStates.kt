@@ -16,7 +16,8 @@ data class EditorStates(
 sealed class ToolState {
     data class TextState(
         val selectedFontId: String = "1",
-        val fontOptions: List<FontOption> = emptyList()
+        val fontOptions: List<FontOption> = emptyList(),
+        val selectedFont: FontOption? = null
     ) : ToolState()
 
     data class StyleState(

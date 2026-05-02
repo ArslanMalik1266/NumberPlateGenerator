@@ -23,18 +23,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.webscare.numberplategenerator.domain.model.EditorTabType
 import com.webscare.numberplategenerator.ui.EditorStates
 import com.webscare.numberplategenerator.ui.PlateType
+import com.webscare.numberplategenerator.ui.ToolState
 import com.webscare.numberplategenerator.ui.theme.bg_color
 import com.webscare.numberplategenerator.ui.theme.grey_color
+import com.webscare.numberplategenerator.utils.loadFontFromUrl
 
 @Composable
 fun PlatePreviewContainer(
     state: EditorStates,
     modifier: Modifier = Modifier,
 ) {
+    val textState = state.toolStates[EditorTabType.TEXT] as? ToolState.TextState
+    val styleState = state.toolStates[EditorTabType.STYLE] as? ToolState.StyleState
+        ?: ToolState.StyleState()
+    val fontUrl = textState?.selectedFont?.fontUrl
+    val customFontFamily = loadFontFromUrl(fontUrl)
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -68,7 +79,11 @@ fun PlatePreviewContainer(
                 Text(
                     text = state.plateText,
                     fontSize = if (state.plateType == PlateType.BIKE) 32.sp else 45.sp,
-                    color = Color.Black,
+                    fontWeight = if (styleState.isBold) FontWeight.Bold else FontWeight.Normal,
+                    fontStyle = if (styleState.isItalic) FontStyle.Italic else FontStyle.Normal,
+                    textDecoration = if (styleState.isUnderline) TextDecoration.Underline else TextDecoration.None,
+                    fontFamily = customFontFamily,
+                    color = Color(styleState.selectedColor),
                     letterSpacing = 2.sp
                 )
 

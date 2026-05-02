@@ -85,10 +85,14 @@ class MainViewModel(
     fun onFontSelect(id: String) {
         _editorState.update { currentState ->
             val textState = (currentState.toolStates[EditorTabType.TEXT] as? ToolState.TextState)
-                ?.copy(selectedFontId = id) ?: ToolState.TextState(selectedFontId = id)
+            val newSelectedFont = textState?.fontOptions?.find { it.id == id }
+            val updatedTextState = textState?.copy(
+                selectedFontId = id,
+                selectedFont = newSelectedFont // Poora object store kar liya
+            ) ?: ToolState.TextState(selectedFontId = id, selectedFont = newSelectedFont)
 
             currentState.copy(
-                toolStates = currentState.toolStates + (EditorTabType.TEXT to textState)
+                toolStates = currentState.toolStates + (EditorTabType.TEXT to updatedTextState)
             )
         }
     }
@@ -114,6 +118,45 @@ class MainViewModel(
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    fun toggleBold() {
+        _editorState.update { currentState ->
+            val currentStyle = (currentState.toolStates[EditorTabType.STYLE] as? ToolState.StyleState)
+                ?: ToolState.StyleState()
+
+            val updatedStyle = currentStyle.copy(isBold = !currentStyle.isBold)
+
+            currentState.copy(
+                toolStates = currentState.toolStates + (EditorTabType.STYLE to updatedStyle)
+            )
+        }
+    }
+
+    fun toggleItalic() {
+        _editorState.update { currentState ->
+            val currentStyle = (currentState.toolStates[EditorTabType.STYLE] as? ToolState.StyleState)
+                ?: ToolState.StyleState()
+
+            val updatedStyle = currentStyle.copy(isItalic = !currentStyle.isItalic)
+
+            currentState.copy(
+                toolStates = currentState.toolStates + (EditorTabType.STYLE to updatedStyle)
+            )
+        }
+    }
+
+    fun toggleUnderline() {
+        _editorState.update { currentState ->
+            val currentStyle = (currentState.toolStates[EditorTabType.STYLE] as? ToolState.StyleState)
+                ?: ToolState.StyleState()
+
+            val updatedStyle = currentStyle.copy(isUnderline = !currentStyle.isUnderline)
+
+            currentState.copy(
+                toolStates = currentState.toolStates + (EditorTabType.STYLE to updatedStyle)
+            )
         }
     }
 

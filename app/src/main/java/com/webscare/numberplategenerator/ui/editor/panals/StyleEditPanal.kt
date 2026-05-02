@@ -25,6 +25,7 @@ import com.webscare.numberplategenerator.ui.ToolState
 import com.webscare.numberplategenerator.ui.MainViewModel
 import com.webscare.numberplategenerator.ui.theme.black_color
 import com.webscare.numberplategenerator.ui.theme.grey_color
+import com.webscare.numberplategenerator.ui.theme.pink_color
 import com.webscare.numberplategenerator.ui.theme.white_color
 import org.koin.androidx.compose.koinViewModel
 
@@ -60,7 +61,7 @@ fun StyleEditPanel(
                     icon = "B",
                     isSelected = styleState.isBold,
                     modifier = Modifier.weight(1f),
-                    onClick = { }
+                    onClick = { viewModel.toggleBold() }
                 )
                 StyleToggleButton(
                     label = "Italic",
@@ -68,7 +69,7 @@ fun StyleEditPanel(
                     isSelected = styleState.isItalic,
                     isItalic = true,
                     modifier = Modifier.weight(1f),
-                    onClick = { }
+                    onClick = { viewModel.toggleItalic() }
                 )
                 StyleToggleButton(
                     label = "Underline",
@@ -76,7 +77,7 @@ fun StyleEditPanel(
                     isSelected = styleState.isUnderline,
                     isUnderline = true,
                     modifier = Modifier.weight(1f),
-                    onClick = {}
+                    onClick = {viewModel.toggleUnderline()}
                 )
             }
             Spacer(modifier = Modifier.height(24.dp))
@@ -122,13 +123,13 @@ fun StyleToggleButton(
     Row(
         modifier = modifier
             .background(
-                color = white_color,
+                color = (if (isSelected) pink_color.copy(0.05f) else white_color),
                 shape = RoundedCornerShape(16.dp)
             )
             .clickable { onClick() }
             .border(
                 width = 1.dp,
-                color = if (isSelected) black_color else grey_color.copy(alpha = 0.15f),
+                color = if (isSelected) pink_color else grey_color.copy(0.15f),
                 shape = RoundedCornerShape(16.dp)
             )
 
