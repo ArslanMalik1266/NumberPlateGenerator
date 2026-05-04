@@ -3,11 +3,13 @@ package com.webscare.numberplategenerator.ui.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.webscare.numberplategenerator.ui.MainViewModel
 import com.webscare.numberplategenerator.ui.editor.EditorScreen
 import com.webscare.numberplategenerator.ui.explore.ExploreScreen
 import com.webscare.numberplategenerator.ui.history.HistoryScreen
 import com.webscare.numberplategenerator.ui.home.HomeScreen
 import com.webscare.numberplategenerator.ui.settings.SettingsScreen
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 fun NavGraphBuilder.appNavigation(
     navController: NavController
@@ -33,6 +35,17 @@ fun NavGraphBuilder.appNavigation(
         )
     }
     composable(Screen.Settings.route) { SettingsScreen() }
-    composable(Screen.Editor.route) { EditorScreen() }
+    composable(Screen.Editor.route) {
+        // koinActivityViewModel() use karein taake same instance mile
+        val viewModel: MainViewModel = koinActivityViewModel()
+
+        EditorScreen(
+            viewModel = viewModel,
+            onBack = {
+                viewModel.resetEditorState()
+                navController.popBackStack()
+            }
+        )
+    }
 
 }

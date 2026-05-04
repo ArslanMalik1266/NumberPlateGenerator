@@ -46,11 +46,12 @@ import com.webscare.numberplategenerator.ui.components.FloatingBottomBar
 import com.webscare.numberplategenerator.ui.navigation.BottomNavConfig
 import com.webscare.numberplategenerator.ui.navigation.Screen
 import com.webscare.numberplategenerator.ui.navigation.appNavigation
+import org.koin.compose.viewmodel.koinActivityViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MainScreen(
-    viewModel: MainViewModel = koinViewModel()
+    viewModel: MainViewModel = koinActivityViewModel()
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()

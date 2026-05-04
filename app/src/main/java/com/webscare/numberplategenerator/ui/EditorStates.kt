@@ -1,5 +1,7 @@
 package com.webscare.numberplategenerator.ui
 
+import android.graphics.Color
+import com.webscare.numberplategenerator.R
 import com.webscare.numberplategenerator.domain.model.EditorTabType
 import com.webscare.numberplategenerator.domain.model.FontOption
 
@@ -9,8 +11,18 @@ data class EditorStates(
     val selectedTab: EditorTabType = EditorTabType.TEXT,
     val toolStates: Map<EditorTabType, ToolState> = mapOf(
         EditorTabType.TEXT to ToolState.TextState(),
-        EditorTabType.STYLE to ToolState.StyleState()
+        EditorTabType.STYLE to ToolState.StyleState(),
+        EditorTabType.NAME to ToolState.NameState(),
+        EditorTabType.FLAG to ToolState.FlagState(),
+        EditorTabType.STICKER to ToolState.StickerState(),
+        EditorTabType.BACKGROUND to ToolState.BackgroundState()
     )
+)
+
+data class FlagOption(
+    val id: String,
+    val name: String,
+    val resId: Int? = null
 )
 
 sealed class ToolState {
@@ -26,8 +38,39 @@ sealed class ToolState {
         val isUnderline: Boolean = false,
         val selectedColor: Int = 0xFF000000.toInt(),
     ) : ToolState()
+
+    data class NameState(
+        val ownerName: String = "",
+        val isVisible: Boolean = true
+    ) : ToolState()
+
+    data class FlagState(
+        val selectedFlagId: String = "none",
+        val selectedFlagRes: Int? = null
+    ) : ToolState()
+
+    data class StickerState(
+        val selectedStickerId: String = "none",
+        val selectedStickerRes: Int? = null,
+        val stickerTint: Int = 0xFF000000.toInt()
+
+        ) : ToolState()
+
+    data class BackgroundState(
+        val selectedBackgroundId: String = "pb_car"
+    ) : ToolState()
 }
 
 enum class PlateType {
     CAR, BIKE
 }
+
+data class PlateBackground(
+    val id: String,
+    val name: String,
+    val description: String,
+    val headerColor: androidx.compose.ui.graphics.Color,
+    val plateColor: androidx.compose.ui.graphics.Color,
+    val headerText: String,
+    val type: PlateType
+)

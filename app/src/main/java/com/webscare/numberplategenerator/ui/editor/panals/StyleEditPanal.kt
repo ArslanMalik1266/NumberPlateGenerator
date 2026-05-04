@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.webscare.numberplategenerator.data.datasource.StyleDataProvider
+import com.webscare.numberplategenerator.data.datasource.AssetDataProvider
 import com.webscare.numberplategenerator.domain.model.EditorTabType
 import com.webscare.numberplategenerator.ui.ToolState
 import com.webscare.numberplategenerator.ui.MainViewModel
@@ -27,12 +27,12 @@ import com.webscare.numberplategenerator.ui.theme.black_color
 import com.webscare.numberplategenerator.ui.theme.grey_color
 import com.webscare.numberplategenerator.ui.theme.pink_color
 import com.webscare.numberplategenerator.ui.theme.white_color
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun StyleEditPanel(
-    viewModel: MainViewModel = koinViewModel()
+    viewModel: MainViewModel = koinActivityViewModel()
 ) {
     val state by viewModel.editorState.collectAsState()
     val styleState = state.toolStates[EditorTabType.STYLE] as? ToolState.StyleState
@@ -98,7 +98,7 @@ fun StyleEditPanel(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                StyleDataProvider.solidColors.forEach { colorInt ->
+                AssetDataProvider.solidColors.forEach { colorInt ->
                     ColorOptionCircle(
                         colorInt = colorInt,
                         isSelected = styleState.selectedColor == colorInt,

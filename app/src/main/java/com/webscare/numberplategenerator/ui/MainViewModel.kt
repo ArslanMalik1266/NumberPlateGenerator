@@ -133,6 +133,18 @@ class MainViewModel(
             )
         }
     }
+    fun onBackgroundSelect(bgId: String) {
+        _editorState.update { currentState ->
+            val currentBgState = (currentState.toolStates[EditorTabType.BACKGROUND] as? ToolState.BackgroundState)
+                ?: ToolState.BackgroundState()
+
+            val updatedBgState = currentBgState.copy(selectedBackgroundId = bgId)
+
+            currentState.copy(
+                toolStates = currentState.toolStates + (EditorTabType.BACKGROUND to updatedBgState)
+            )
+        }
+    }
 
     fun toggleItalic() {
         _editorState.update { currentState ->
@@ -156,6 +168,76 @@ class MainViewModel(
 
             currentState.copy(
                 toolStates = currentState.toolStates + (EditorTabType.STYLE to updatedStyle)
+            )
+        }
+    }
+    fun onFlagSelect(id: String, resId: Int?) {
+        val currentState = _editorState.value
+        val newFlagState = (currentState.toolStates[EditorTabType.FLAG] as? ToolState.FlagState)
+            ?.copy(
+                selectedFlagId = id,
+                selectedFlagRes = resId // Preview ko resId yahan se milega
+            ) ?: ToolState.FlagState(selectedFlagId = id, selectedFlagRes = resId)
+
+        _editorState.value = currentState.copy(
+            toolStates = currentState.toolStates + (EditorTabType.FLAG to newFlagState)
+        )
+    }
+
+    fun onStickerSelect(id: String, resId: Int?) {
+        _editorState.update { currentState ->
+            val currentStickerState = (currentState.toolStates[EditorTabType.STICKER] as? ToolState.StickerState)
+                ?: ToolState.StickerState()
+
+            val updatedStickerState = currentStickerState.copy(
+                selectedStickerId = id,
+                selectedStickerRes = resId,
+                stickerTint = currentStickerState.stickerTint
+            )
+
+            currentState.copy(
+                toolStates = currentState.toolStates + (EditorTabType.STICKER to updatedStickerState)
+            )
+        }
+    }
+    fun onStickerColorSelect(colorInt: Int) {
+        _editorState.update { currentState ->
+            val currentStickerState = (currentState.toolStates[EditorTabType.STICKER] as? ToolState.StickerState)
+                ?: ToolState.StickerState()
+
+            val updatedStickerState = currentStickerState.copy(
+                stickerTint = colorInt // Naya color apply hoga
+            )
+
+            currentState.copy(
+                toolStates = currentState.toolStates + (EditorTabType.STICKER to updatedStickerState)
+            )
+        }
+    }
+
+    fun resetEditorState() {
+        _editorState.update { currentState ->
+            val currentFonts = (currentState.toolStates[EditorTabType.TEXT] as? ToolState.TextState)?.fontOptions ?: emptyList()
+            val defaultState = EditorStates()
+            val resetTextState = ToolState.TextState(
+                fontOptions = currentFonts,
+                selectedFontId = currentFonts.firstOrNull()?.id ?: "1"
+            )
+            defaultState.copy(
+                toolStates = defaultState.toolStates + (EditorTabType.TEXT to resetTextState)
+            )
+        }
+    }
+
+    fun onOwnerNameChange(newName: String) {
+        _editorState.update { currentState ->
+            val currentNameState = (currentState.toolStates[EditorTabType.NAME] as? ToolState.NameState)
+                ?: ToolState.NameState()
+
+            val updatedNameState = currentNameState.copy(ownerName = newName)
+
+            currentState.copy(
+                toolStates = currentState.toolStates + (EditorTabType.NAME to updatedNameState)
             )
         }
     }

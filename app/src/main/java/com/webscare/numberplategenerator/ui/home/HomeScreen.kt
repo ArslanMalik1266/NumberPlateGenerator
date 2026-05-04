@@ -60,6 +60,7 @@ import com.webscare.numberplategenerator.ui.theme.pink_color
 import com.webscare.numberplategenerator.ui.theme.white_color
 import com.webscare.numberplategenerator.utils.addPressEffect
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 
 @Preview(showSystemUi = true)
@@ -74,7 +75,7 @@ fun PreviewHomeScreenFull() {
 
 @Composable
 fun HomeScreen(
-    viewModel : MainViewModel = koinViewModel(),
+    viewModel : MainViewModel = koinActivityViewModel(),
     onNotificationClick: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()

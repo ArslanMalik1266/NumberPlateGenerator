@@ -33,10 +33,11 @@ import com.webscare.numberplategenerator.ui.theme.black_color
 import com.webscare.numberplategenerator.ui.theme.grey_color
 import com.webscare.numberplategenerator.ui.theme.white_color
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 @Composable
 fun TextEditPanel(
-    viewModel: MainViewModel = koinViewModel()
+    viewModel: MainViewModel = koinActivityViewModel()
 ) {
     val state by viewModel.editorState.collectAsState()
     val textState = state.toolStates[EditorTabType.TEXT] as? ToolState.TextState

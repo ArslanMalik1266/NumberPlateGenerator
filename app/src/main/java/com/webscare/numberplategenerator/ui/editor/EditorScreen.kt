@@ -29,8 +29,13 @@ import androidx.compose.ui.unit.sp
 import com.webscare.numberplategenerator.R
 import com.webscare.numberplategenerator.domain.model.EditorTabType
 import com.webscare.numberplategenerator.ui.MainViewModel
+import com.webscare.numberplategenerator.ui.editor.panals.BackgroundEditPanel
+import com.webscare.numberplategenerator.ui.editor.panals.FlagEditPanel
+import com.webscare.numberplategenerator.ui.editor.panals.NameEditPanel
+import com.webscare.numberplategenerator.ui.editor.panals.StickerEditPanel
 import com.webscare.numberplategenerator.ui.editor.panals.StyleEditPanel
 import com.webscare.numberplategenerator.ui.editor.panals.TextEditPanel
+import com.webscare.numberplategenerator.ui.editor.panals.TypeEditPanel
 import com.webscare.numberplategenerator.ui.theme.black_color
 import com.webscare.numberplategenerator.ui.theme.grey_color
 import com.webscare.numberplategenerator.ui.theme.white_color
@@ -39,44 +44,68 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.viewmodel.koinActivityViewModel
 
 @Composable
-fun EditorScreen (
-    viewModel: MainViewModel = koinActivityViewModel()
-){
+fun EditorScreen(
+    viewModel: MainViewModel = koinActivityViewModel(),
+    onBack: () -> Unit
+) {
     val state by viewModel.editorState.collectAsState()
     Column(
-    modifier = Modifier
-        .fillMaxSize()
-        .background(white_color)
-) {
-    EditorHeader()
-    Spacer(modifier = Modifier.height(12.dp))
-    PlatePreviewContainer(state = state
-    )
-    Spacer(modifier = Modifier.height(8.dp))
-    EditorTabsBar(
-        tabs = viewModel.editorTabs,
-        selectedTabId = state.selectedTab,
-        onTabSelected = { id -> viewModel.onTabSelected(id) }
-    )
-    Spacer(modifier = Modifier.height(8.dp))
-    EditorPanelContainer(modifier = Modifier.weight(1f)) {
-        when (state.selectedTab) {
-            EditorTabType.TEXT -> {
-                TextEditPanel(viewModel = viewModel)
-            }
-            EditorTabType.STYLE -> { StyleEditPanel(viewModel = viewModel) }
-            EditorTabType.BACKGROUND -> { /* BGPanel() */ }
-            EditorTabType.FLAG -> { /* FlagPanel() */ }
+        modifier = Modifier
+            .fillMaxSize()
+            .background(white_color)
+    ) {
+        EditorHeader(
+            onBackClick = onBack
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        PlatePreviewContainer(
+            state = state
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        EditorTabsBar(
+            tabs = viewModel.editorTabs,
+            selectedTabId = state.selectedTab,
+            onTabSelected = { id -> viewModel.onTabSelected(id) }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        EditorPanelContainer(modifier = Modifier.weight(1f)) {
+            when (state.selectedTab) {
+                EditorTabType.TEXT -> {
+                    TextEditPanel(viewModel = viewModel)
+                }
 
-            else -> { /* Default case */ }
+                EditorTabType.STYLE -> {
+                    StyleEditPanel(viewModel = viewModel)
+                }
+
+                EditorTabType.BACKGROUND -> {
+                    BackgroundEditPanel(viewModel = viewModel)
+                }
+
+                EditorTabType.FLAG -> {
+                    FlagEditPanel(viewModel = viewModel)
+                }
+
+                EditorTabType.TYPE -> {
+                    TypeEditPanel(viewModel = viewModel)
+                }
+
+                EditorTabType.NAME -> {
+                    NameEditPanel(viewModel = viewModel)
+                }
+                EditorTabType.STICKER -> {
+                    StickerEditPanel(viewModel = viewModel)
+                }
+
+                else -> { /* Default case */
+                }
+            }
         }
     }
 }
-}
 
 @Composable
-fun EditorHeader()
-{
+fun EditorHeader(onBackClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -87,19 +116,21 @@ fun EditorHeader()
         Box(
             modifier = Modifier
                 .size(40.dp)
-                .addPressEffect()
+                .addPressEffect {
+                    onBackClick()
+                }
                 .background(
                     grey_color.copy(alpha = 0.2f),
                     shape = RoundedCornerShape(12.dp)
-                )
-            ,
+                ),
             contentAlignment = Alignment.Center
         ) {
             Image(
                 painter = painterResource(R.drawable.arrow_back),
                 contentDescription = "",
                 modifier = Modifier.size(22.dp),
-                colorFilter = ColorFilter.tint(black_color))
+                colorFilter = ColorFilter.tint(black_color)
+            )
 
 
         }
@@ -127,15 +158,15 @@ fun EditorHeader()
                 .background(
                     grey_color.copy(alpha = 0.2f),
                     shape = RoundedCornerShape(12.dp)
-                )
-            ,
+                ),
             contentAlignment = Alignment.Center
         ) {
             Image(
                 painter = painterResource(R.drawable.ic_share),
                 contentDescription = "",
                 modifier = Modifier.size(16.dp),
-                colorFilter = ColorFilter.tint(black_color))
+                colorFilter = ColorFilter.tint(black_color)
+            )
 
 
         }
@@ -148,15 +179,15 @@ fun EditorHeader()
                 .background(
                     grey_color.copy(alpha = 0.2f),
                     shape = RoundedCornerShape(12.dp)
-                )
-            ,
+                ),
             contentAlignment = Alignment.Center
         ) {
             Image(
                 painter = painterResource(R.drawable.ic_save),
                 contentDescription = "",
                 modifier = Modifier.size(16.dp),
-                colorFilter = ColorFilter.tint(black_color))
+                colorFilter = ColorFilter.tint(black_color)
+            )
 
 
         }
