@@ -42,7 +42,6 @@ fun NavGraphBuilder.appNavigation(
             viewModel = viewModel,
             onBack = {
                 navController.popBackStack()
-                viewModel.resetEditorState()
             }
         )
     }
