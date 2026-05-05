@@ -36,14 +36,13 @@ fun NavGraphBuilder.appNavigation(
     }
     composable(Screen.Settings.route) { SettingsScreen() }
     composable(Screen.Editor.route) {
-        // koinActivityViewModel() use karein taake same instance mile
         val viewModel: MainViewModel = koinActivityViewModel()
 
         EditorScreen(
             viewModel = viewModel,
             onBack = {
-                viewModel.resetEditorState()
                 navController.popBackStack()
+                viewModel.resetEditorState()
             }
         )
     }

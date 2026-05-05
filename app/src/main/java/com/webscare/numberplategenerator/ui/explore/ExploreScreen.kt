@@ -50,11 +50,12 @@ import com.webscare.numberplategenerator.ui.theme.grey_color
 import com.webscare.numberplategenerator.ui.theme.white_color
 import com.webscare.numberplategenerator.utils.addPressEffect
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 @Composable
 fun ExploreScreen(
     onBackClick: () -> Unit,
-    viewModel: MainViewModel = koinViewModel()
+    viewModel: MainViewModel = koinActivityViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val filterTabs = listOf(
@@ -62,50 +63,49 @@ fun ExploreScreen(
         FilterTabItem("2", "Car", R.drawable.ic_car),
         FilterTabItem("3", "Bike", R.drawable.ic_motorbike)
     )
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2), // 2 items per row
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 12.dp)
             .background(bg_color)
             .padding(top = 54.dp)
     ) {
-        // 1. Header Section (Full Width Span)
-        item(span = { GridItemSpan(2) }) {
-            Column {
-                Column(modifier = Modifier.padding(horizontal = 12.dp)) {
-                    ExploreHeader(onBackClick = onBackClick)
-                    GenericTitleSection(
-                        title = "GALLERY",
-                        subtitle = "Browse templates",
-                        description = "${uiState.templates.size} designs"
-                    )
-                }
+        Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+            ExploreHeader(onBackClick = onBackClick)
+            GenericTitleSection(
+                title = "GALLERY",
+                subtitle = "Browse templates",
+                description = "${uiState.templates.size} designs"
+            )
 
-                Spacer(modifier = Modifier.height(12.dp))
-                SearchBar(
-                    query = uiState.searchQuery,
-                    onQueryChange = { viewModel.onSearchQueryChange(it) }
-                )
+            Spacer(modifier = Modifier.height(12.dp))
+            SearchBar(
+                query = uiState.searchQuery,
+                onQueryChange = { viewModel.onSearchQueryChange(it) }
+            )
 
-                Spacer(modifier = Modifier.height(12.dp))
-                GenericFilterRow(
-                    items = filterTabs,
-                    selectedId = uiState.selectedFilterId,
-                    onItemSelected = { viewModel.onFilterSelected(it.id) }
-                )
-                Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(12.dp))
+            GenericFilterRow(
+                items = filterTabs,
+                selectedId = uiState.selectedFilterId,
+                onItemSelected = { viewModel.onFilterSelected(it.id) }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(horizontal = 12.dp)
+        ) {
+            items(uiState.templates) { template ->
+                TemplateCard(template = template)
             }
-        }
 
-
-        items(uiState.templates) { template ->
-            TemplateCard(template = template)
-        }
-
-
-        item(span = { GridItemSpan(2) }) {
-            Spacer(modifier = Modifier.height(100.dp))
+            item(span = { GridItemSpan(2) }) {
+                Spacer(modifier = Modifier.height(100.dp))
+            }
         }
     }
 }
@@ -147,7 +147,6 @@ fun SearchBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp)
             .height(44.dp)
             .clip(RoundedCornerShape(24.dp))
             .background(white_color)

@@ -1,6 +1,7 @@
 package com.webscare.numberplategenerator.domain.model
 
 enum class EditorTabType(val id: String) {
+    DIMENSION("dimension"),
     TEXT("text"),
     STYLE("style"),
     BACKGROUND("bg"),

@@ -3,6 +3,8 @@ package com.webscare.numberplategenerator.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.webscare.numberplategenerator.R
+import com.webscare.numberplategenerator.data.datasource.AssetDataProvider
+import com.webscare.numberplategenerator.domain.model.DimensionOption
 import com.webscare.numberplategenerator.domain.model.EditorTabType
 import com.webscare.numberplategenerator.domain.model.FontOption
 import com.webscare.numberplategenerator.domain.model.PlateTemplate
@@ -30,6 +32,7 @@ class MainViewModel(
     val editorState = _editorState.asStateFlow()
 
     val editorTabs = listOf(
+        EditorTab(EditorTabType.DIMENSION, "Dimensions", R.drawable.ic_ai_gen),
         EditorTab(EditorTabType.TEXT, "Text", R.drawable.ic_text),
         EditorTab(EditorTabType.STYLE, "Style", R.drawable.ic_ai_gen),
         EditorTab(EditorTabType.BACKGROUND, "Background", R.drawable.ic_bg),
@@ -45,12 +48,34 @@ class MainViewModel(
         loadFonts()
     }
 
-    // --- Main State Updates ---
+
+
+
 
     fun onSearchQueryChange(newQuery: String) {
         _uiState.update { it.copy(searchQuery = newQuery) }
     }
 
+    fun updatePlateDimension(option: DimensionOption) {
+        _editorState.update { currentState ->
+            val currentDimState = (currentState.toolStates[EditorTabType.DIMENSION] as? ToolState.DimensionState)
+                ?: ToolState.DimensionState()
+
+            // Update specific slot based on current context
+            val updatedDimState = when (currentState.plateType) {
+                PlateType.CAR -> {
+                   currentDimState.copy(carBackId = option.id)
+                }
+                PlateType.BIKE -> {
+                  currentDimState.copy(bikeBackId = option.id)
+                }
+            }
+
+            currentState.copy(
+                toolStates = currentState.toolStates + (EditorTabType.DIMENSION to updatedDimState)
+            )
+        }
+    }
     fun onFilterSelected(id: String) {
         _uiState.update { it.copy(selectedFilterId = id) }
     }
@@ -217,14 +242,28 @@ class MainViewModel(
 
     fun resetEditorState() {
         _editorState.update { currentState ->
+            // 1. Sirf fonts ko preserve karein kyunki wo network/source se aate hain
             val currentFonts = (currentState.toolStates[EditorTabType.TEXT] as? ToolState.TextState)?.fontOptions ?: emptyList()
+
+            // 2. Default state banayein
             val defaultState = EditorStates()
+
+            // 3. Senior Approach: Hardcoding ki jagah Data Source se pehla valid item nikaalein
+            // Hum filter kar rahe hain taake Car ke liye Car ki aur Bike ke liye Bike ki default dimension aaye
+
+
+
             val resetTextState = ToolState.TextState(
                 fontOptions = currentFonts,
                 selectedFontId = currentFonts.firstOrNull()?.id ?: "1"
             )
+
+            // 4. State update: merge current preserved data with fresh defaults
             defaultState.copy(
-                toolStates = defaultState.toolStates + (EditorTabType.TEXT to resetTextState)
+                plateType = currentState.plateType, // Current type (Car/Bike) barkrar rakhein
+                toolStates = defaultState.toolStates + mapOf(
+                    EditorTabType.TEXT to resetTextState,
+                )
             )
         }
     }
@@ -235,6 +274,7 @@ class MainViewModel(
                 ?: ToolState.NameState()
 
             val updatedNameState = currentNameState.copy(ownerName = newName)
+
 
             currentState.copy(
                 toolStates = currentState.toolStates + (EditorTabType.NAME to updatedNameState)
@@ -258,7 +298,7 @@ class MainViewModel(
 
                     val updatedTextState = currentTextState.copy(
                         fontOptions = fonts,
-                        selectedFontId = fonts.firstOrNull()?.id ?: "1"
+                        selectedFontId = ""
                     )
                     println("DEBUG_NET: State update dispatched to UI")
                     currentState.copy(

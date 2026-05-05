@@ -2,6 +2,7 @@ package com.webscare.numberplategenerator.data.datasource
 
 import androidx.compose.ui.graphics.Color
 import com.webscare.numberplategenerator.R
+import com.webscare.numberplategenerator.domain.model.DimensionOption
 import com.webscare.numberplategenerator.ui.FlagOption
 import com.webscare.numberplategenerator.ui.PlateBackground
 import com.webscare.numberplategenerator.ui.PlateType
@@ -26,7 +27,32 @@ object AssetDataProvider {
         0xFFADFF2F.toInt(), 0xFF40E0D0.toInt(), 0xFFEE82EE.toInt(),
         0xFFF5F5DC.toInt()
     )
+    val plateDimensions = listOf(
+        // --- CAR BACK (6 Items) ---
+        DimensionOption("car_back_std", "Standard Car", 520f, 110f, PlateType.CAR, isFront = false),
+        DimensionOption("car_back_sq", "Square / SUV", 285f, 203f, PlateType.CAR, isFront = false),
+        DimensionOption("car_back_us", "US Style", 340f, 200f, PlateType.CAR, isFront = false),
+        DimensionOption("car_back_long", "Extra Long", 530f, 120f, PlateType.CAR, isFront = false),
+        DimensionOption("car_back_slim", "Slimline", 520f, 100f, PlateType.CAR, isFront = false),
+        DimensionOption("car_back_euro", "Euro Plate", 520f, 112f, PlateType.CAR, isFront = false),
 
+        // --- CAR FRONT (3 Items) ---
+        DimensionOption("car_front_std", "Standard Front", 520f, 110f, PlateType.CAR, isFront = true),
+        DimensionOption("car_front_slim", "Slim Front", 520f, 90f, PlateType.CAR, isFront = true),
+        DimensionOption("car_front_small", "Small Front", 340f, 110f, PlateType.CAR, isFront = true),
+
+        // --- BIKE BACK (5 Items) ---
+        DimensionOption("bike_back_std", "Standard Bike", 200f, 150f, PlateType.BIKE, isFront = false),
+        DimensionOption("bike_back_sq", "Square Bike", 180f, 180f, PlateType.BIKE, isFront = false),
+        DimensionOption("bike_back_narrow", "Narrow Bike", 150f, 150f, PlateType.BIKE, isFront = false),
+        DimensionOption("bike_back_large", "Large Bike", 230f, 180f, PlateType.BIKE, isFront = false),
+        DimensionOption("bike_back_vintage", "Vintage Bike", 190f, 160f, PlateType.BIKE, isFront = false),
+
+        // --- BIKE FRONT (3 Items) ---
+        DimensionOption("bike_front_std", "Standard Front", 200f, 150f, PlateType.BIKE, isFront = true),
+        DimensionOption("bike_front_small", "Small Front", 150f, 100f, PlateType.BIKE, isFront = true),
+        DimensionOption("bike_front_curved", "Curved Front", 180f, 120f, PlateType.BIKE, isFront = true)
+    )
     val flagOptions = listOf(
         FlagOption("none", "None"),
         FlagOption("pk", "Pakistan", R.drawable.flag_pk),

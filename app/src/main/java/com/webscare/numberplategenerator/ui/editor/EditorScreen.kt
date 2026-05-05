@@ -1,5 +1,6 @@
 package com.webscare.numberplategenerator.ui.editor
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,7 @@ import com.webscare.numberplategenerator.R
 import com.webscare.numberplategenerator.domain.model.EditorTabType
 import com.webscare.numberplategenerator.ui.MainViewModel
 import com.webscare.numberplategenerator.ui.editor.panals.BackgroundEditPanel
+import com.webscare.numberplategenerator.ui.editor.panals.DimensionEditPanel
 import com.webscare.numberplategenerator.ui.editor.panals.FlagEditPanel
 import com.webscare.numberplategenerator.ui.editor.panals.NameEditPanel
 import com.webscare.numberplategenerator.ui.editor.panals.StickerEditPanel
@@ -49,6 +51,10 @@ fun EditorScreen(
     onBack: () -> Unit
 ) {
     val state by viewModel.editorState.collectAsState()
+    BackHandler {
+        onBack()
+        viewModel.resetEditorState()
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -58,7 +64,7 @@ fun EditorScreen(
             onBackClick = onBack
         )
         Spacer(modifier = Modifier.height(12.dp))
-        PlatePreviewContainer(
+        PlateCanvasPreview(
             state = state
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -70,6 +76,10 @@ fun EditorScreen(
         Spacer(modifier = Modifier.height(8.dp))
         EditorPanelContainer(modifier = Modifier.weight(1f)) {
             when (state.selectedTab) {
+                EditorTabType.DIMENSION -> {
+                    DimensionEditPanel(viewModel = viewModel)
+                }
+
                 EditorTabType.TEXT -> {
                     TextEditPanel(viewModel = viewModel)
                 }

@@ -75,31 +75,39 @@ fun PreviewHomeScreenFull() {
 
 @Composable
 fun HomeScreen(
-    viewModel : MainViewModel = koinActivityViewModel(),
+    viewModel: MainViewModel = koinActivityViewModel(),
     onNotificationClick: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(bg_color)
     ) {
 
-        item {
-            HomeHeaderSection(onNotificationClick = onNotificationClick)
-        }
-        item {
-            SectionHeader(title = "Browse templates", onSeeAllClick = { /* Handle nav */ })
-            TemplateHorizontalList(templates = uiState.templates)
-        }
-        item {
-            SectionHeader(title = "Recents", onSeeAllClick = { /* Handle nav */ })
-            RecentHorizontalList(recents = uiState.recents)
-        }
+        HomeHeaderSection(onNotificationClick = onNotificationClick)
 
-        item { Spacer(modifier = Modifier.height(100.dp)) }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f)
+        )
+        {
 
+
+            item {
+                SectionHeader(title = "Browse templates", onSeeAllClick = { /* Handle nav */ })
+                TemplateHorizontalList(templates = uiState.templates)
+            }
+            item {
+                SectionHeader(title = "Recents", onSeeAllClick = { /* Handle nav */ })
+                RecentHorizontalList(recents = uiState.recents)
+            }
+
+            item { Spacer(modifier = Modifier.height(100.dp)) }
+
+        }
     }
 }
 
@@ -117,6 +125,7 @@ fun TemplateHorizontalList(
         }
     }
 }
+
 @Composable
 fun TemplateCard(template: PlateTemplate) {
     Card(
@@ -139,7 +148,9 @@ fun TemplateCard(template: PlateTemplate) {
                 Image(
                     painter = painterResource(id = template.image), // Use your specific drawable
                     contentDescription = null,
-                    modifier = Modifier.fillMaxSize().padding(8.dp)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp)
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -164,8 +175,7 @@ fun TemplateCard(template: PlateTemplate) {
 }
 
 @Composable
-fun Header(onClick: () -> Unit)
-{
+fun Header(onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -191,10 +201,11 @@ fun Header(onClick: () -> Unit)
             )
         }
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
                 .padding(start = 8.dp, end = 8.dp),
 
-        ) {
+            ) {
             Text(
                 text = "NUMBER PLATE",
                 fontSize = 12.sp,
@@ -217,15 +228,17 @@ fun Header(onClick: () -> Unit)
             modifier = Modifier
                 .size(40.dp)
                 .addPressEffect() { onClick() }
-                .background(white_color.copy(alpha = 0.2f),
-                    shape = RoundedCornerShape(12.dp))
-                ,
+                .background(
+                    white_color.copy(alpha = 0.2f),
+                    shape = RoundedCornerShape(12.dp)
+                ),
             contentAlignment = Alignment.Center
         ) {
             Image(
                 painter = painterResource(R.drawable.notification_bell),
                 contentDescription = "",
-                modifier = Modifier.size(18.dp))
+                modifier = Modifier.size(18.dp)
+            )
 
         }
     }
@@ -235,15 +248,14 @@ fun Header(onClick: () -> Unit)
 fun HomeHeaderSection(
     onNotificationClick: () -> Unit,
     modifier: Modifier = Modifier
-)
-{
+) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight(),
         shape = RoundedCornerShape(bottomStart = 40.dp, bottomEnd = 40.dp),
 
-    ) {
+        ) {
         val gradientBrush = Brush.linearGradient(
             colors = listOf(
                 Color(0xFFE91E63),
@@ -259,7 +271,8 @@ fun HomeHeaderSection(
                 .wrapContentHeight()
                 .background(
                     brush = gradientBrush
-                ).padding(top = 40.dp)
+                )
+                .padding(top = 40.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -301,7 +314,7 @@ fun HomeHeaderSection(
                             )
                             .padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically
-                    ){
+                    ) {
                         val gradientBrush = Brush.linearGradient(
                             colors = listOf(
                                 Color(0xFFE91E63), // rgb(233, 30, 99)
@@ -317,14 +330,14 @@ fun HomeHeaderSection(
                                 .background(
                                     brush = gradientBrush,
                                     shape = RoundedCornerShape(12.dp)
-                                )
-                            ,
+                                ),
                             contentAlignment = Alignment.Center
                         ) {
                             Image(
                                 painter = painterResource(R.drawable.ic_ai_gen),
                                 contentDescription = null,
-                                modifier = Modifier.size(20.dp))
+                                modifier = Modifier.size(20.dp)
+                            )
                         }
 
                         Column(
@@ -366,6 +379,7 @@ fun HomeHeaderSection(
         }
     }
 }
+
 @Composable
 fun SectionHeader(
     title: String,
@@ -419,7 +433,9 @@ fun RecentPlateCard(recent: RecentPlate) {
                 Image(
                     painter = painterResource(id = recent.image),
                     contentDescription = null,
-                    modifier = Modifier.fillMaxSize().padding(8.dp)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp)
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))

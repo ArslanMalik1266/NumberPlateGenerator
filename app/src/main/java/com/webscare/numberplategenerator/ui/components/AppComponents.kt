@@ -377,7 +377,6 @@ fun GenericFilterRow(
     onItemSelected: (FilterTabItem) -> Unit
 ) {
     LazyRow(
-        contentPadding = PaddingValues(horizontal = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(items) { item ->

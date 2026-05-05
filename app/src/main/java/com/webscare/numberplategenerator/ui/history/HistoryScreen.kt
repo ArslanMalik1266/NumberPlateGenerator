@@ -46,11 +46,12 @@ import com.webscare.numberplategenerator.ui.theme.red_color
 import com.webscare.numberplategenerator.ui.theme.white_color
 import com.webscare.numberplategenerator.utils.addPressEffect
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 @Composable
 fun HistoryScreen(
     onBackClick: () -> Unit,
-    viewModel: MainViewModel = koinViewModel()
+    viewModel: MainViewModel = koinActivityViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -60,49 +61,52 @@ fun HistoryScreen(
         FilterTabItem("3", "Bike", R.drawable.ic_motorbike)
     )
 
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 12.dp)
             .background(bg_color)
             .padding(top = 54.dp)
     ) {
-        item {
-            Column {
-                Column(modifier = Modifier.padding(horizontal = 12.dp)) {
-                    RecentHeader (onBackClick = onBackClick)
-                    GenericTitleSection(
-                        title = "MY PLATES",
-                        subtitle = "Recents",
-                        description = "${uiState.recents.size} designs"
-                    )
-                }
-            }
-        }
-        item {
+        Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+            RecentHeader(onBackClick = onBackClick)
+            GenericTitleSection(
+                title = "MY PLATES",
+                subtitle = "Recents",
+                description = "${uiState.recents.size} designs"
+            )
+
             Spacer(modifier = Modifier.height(12.dp))
+
             GenericFilterRow(
                 items = filterTabs,
                 selectedId = uiState.selectedFilterId,
                 onItemSelected = { viewModel.onFilterSelected(it.id) }
             )
-            Spacer(modifier = Modifier.height(24.dp))
-        }
-        items(uiState.recents.size) { index ->
-            val recent = uiState.recents[index]
 
-            HistoryItemRow(
-                plateNumber = recent.plateNumber,
-                time = "2h ago",
-                userName = "Hamza Ali",
-                onEditClick = { /* Handle Edit */ },
-                onDeleteClick = { /* Handle Delete */ }
-            )
+            Spacer(modifier = Modifier.height(16.dp))
         }
 
-        // 4. Bottom spacing
-        item {
-            Spacer(modifier = Modifier.height(100.dp))
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
+            items(uiState.recents.size) { index ->
+                val recent = uiState.recents[index]
+
+                HistoryItemRow(
+                    plateNumber = recent.plateNumber,
+                    time = "2h ago",
+                    userName = "Hamza Ali",
+                    onEditClick = { /* Handle Edit */ },
+                    onDeleteClick = { /* Handle Delete */ }
+                )
+            }
+
+            // Bottom padding for accessibility
+            item {
+                Spacer(modifier = Modifier.height(100.dp))
+            }
         }
     }
 }
