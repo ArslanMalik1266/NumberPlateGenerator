@@ -1,6 +1,7 @@
 package com.webscare.numberplategenerator.ui
 
 import android.graphics.Color
+import androidx.compose.ui.geometry.Offset
 import com.webscare.numberplategenerator.R
 import com.webscare.numberplategenerator.domain.model.EditorTabType
 import com.webscare.numberplategenerator.domain.model.FontOption
@@ -9,6 +10,7 @@ data class EditorStates(
     val plateType: PlateType = PlateType.CAR,
     val plateText: String = "LEB-2847",
     val isLongPressingHeader: Boolean = false,
+    val headerDragOffset: Offset = Offset.Zero,
     val isFront: Boolean = true,
     val selectedTab: EditorTabType = EditorTabType.DIMENSION,
     val toolStates: Map<EditorTabType, ToolState> = mapOf(

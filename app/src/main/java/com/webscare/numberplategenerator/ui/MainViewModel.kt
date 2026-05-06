@@ -1,5 +1,6 @@
 package com.webscare.numberplategenerator.ui
 
+import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.webscare.numberplategenerator.R
@@ -89,6 +90,20 @@ class MainViewModel(
         _editorState.update { it.copy(isLongPressingHeader = isPressed) }
     }
 
+    fun onHeaderMove(dragAmount: Offset) {
+        _editorState.update { currentState ->
+            // Canvas ki width aur height ke mutabiq kafi bari range
+            // Isse header plate ke kisi bhi kone mein ja sakega
+            val newX = (currentState.headerDragOffset.x + dragAmount.x).coerceIn(-600f, 600f)
+            val newY = (currentState.headerDragOffset.y + dragAmount.y).coerceIn(-100f, 800f)
+
+            currentState.copy(headerDragOffset = Offset(newX, newY))
+        }
+    }
+
+    fun resetHeaderOffset() {
+        _editorState.update { it.copy(headerDragOffset = Offset.Zero, isLongPressingHeader = false) }
+    }
     fun updateSide(isFront: Boolean) {
         _editorState.update { currentState ->
             val dimState = (currentState.toolStates[EditorTabType.DIMENSION] as? ToolState.DimensionState)

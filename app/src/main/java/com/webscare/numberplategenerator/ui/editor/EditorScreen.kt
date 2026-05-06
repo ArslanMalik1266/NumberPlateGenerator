@@ -107,6 +107,12 @@ fun EditorScreen(
             externalRotation = rotationAngle,
             onLongPressAction = { isPressed ->
                 viewModel.onHeaderLongPress(isPressed)
+            },
+            onHeaderMove = { dragAmount ->
+                viewModel.onHeaderMove(dragAmount)
+            },
+            onHeaderReset = {
+                viewModel.resetHeaderOffset()
             }
         )
         Spacer(modifier = Modifier.height(8.dp))
