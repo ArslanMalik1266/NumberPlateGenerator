@@ -8,6 +8,7 @@ import com.webscare.numberplategenerator.domain.model.FontOption
 data class EditorStates(
     val plateType: PlateType = PlateType.CAR,
     val plateText: String = "LEB-2847",
+    val isLongPressingHeader: Boolean = false,
     val isFront: Boolean = true,
     val selectedTab: EditorTabType = EditorTabType.DIMENSION,
     val toolStates: Map<EditorTabType, ToolState> = mapOf(
@@ -29,9 +30,10 @@ data class FlagOption(
 
 sealed class ToolState {
     data class DimensionState(
-        // Charo scenarios ke liye alag slots
         val carBackId: String = "car_back_std",
-        val bikeBackId: String = "bike_back_std"
+        val bikeBackId: String = "bike_back_std",
+        val carFrontId: String = "car_front_slim",
+        val bikeFrontId: String = "bike_front_std",
     ) : ToolState()
     data class TextState(
         val selectedFontId: String = "1",

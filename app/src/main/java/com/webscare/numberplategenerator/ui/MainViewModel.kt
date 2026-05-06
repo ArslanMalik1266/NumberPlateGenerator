@@ -64,15 +64,39 @@ class MainViewModel(
             // Update specific slot based on current context
             val updatedDimState = when (currentState.plateType) {
                 PlateType.CAR -> {
-                   currentDimState.copy(carBackId = option.id)
+                    if (currentState.isFront) {
+                        currentDimState.copy(carFrontId = option.id)
+                    } else {
+                        currentDimState.copy(carBackId = option.id)
+                    }
                 }
                 PlateType.BIKE -> {
-                  currentDimState.copy(bikeBackId = option.id)
+                    if (currentState.isFront) {
+                        currentDimState.copy(bikeFrontId = option.id)
+                    } else {
+                        currentDimState.copy(bikeBackId = option.id)
+                    }
                 }
             }
 
             currentState.copy(
                 toolStates = currentState.toolStates + (EditorTabType.DIMENSION to updatedDimState)
+            )
+        }
+    }
+
+    fun onHeaderLongPress(isPressed: Boolean) {
+        _editorState.update { it.copy(isLongPressingHeader = isPressed) }
+    }
+
+    fun updateSide(isFront: Boolean) {
+        _editorState.update { currentState ->
+            val dimState = (currentState.toolStates[EditorTabType.DIMENSION] as? ToolState.DimensionState)
+                ?: ToolState.DimensionState()
+
+            currentState.copy(
+                isFront = isFront,
+                toolStates = currentState.toolStates + (EditorTabType.DIMENSION to dimState)
             )
         }
     }

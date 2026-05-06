@@ -273,7 +273,8 @@ fun SettingsListItem(
     showDivider: Boolean = true,
     onClick: () -> Unit = {},
     trailingContent: @Composable () -> Unit = {}
-) {
+)
+{
     Column(modifier = modifier) {
         Row(
             modifier = Modifier
@@ -324,7 +325,8 @@ fun SettingsListItem(
 fun ThemeToggle(
     isDarkMode: Boolean,
     onToggle: (Boolean) -> Unit
-) {
+)
+{
     Row(
         modifier = Modifier
             .background(Color(0xFFF5F5F5), RoundedCornerShape(8.dp)) // Gray background

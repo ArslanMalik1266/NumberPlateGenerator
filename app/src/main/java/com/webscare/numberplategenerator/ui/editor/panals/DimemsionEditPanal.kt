@@ -49,16 +49,15 @@ fun DimensionEditPanel(
     val state by viewModel.editorState.collectAsState()
     val dimState = state.toolStates[EditorTabType.DIMENSION] as? ToolState.DimensionState
     val currentSelectedId = when (state.plateType) {
-        PlateType.CAR -> dimState?.carBackId
-        PlateType.BIKE -> dimState?.bikeBackId
-    }
+        PlateType.CAR -> if (state.isFront) dimState?.carFrontId else dimState?.carBackId
+        PlateType.BIKE -> if (state.isFront) dimState?.bikeFrontId else dimState?.bikeBackId}
 
     val bgState = state.toolStates[EditorTabType.BACKGROUND] as? ToolState.BackgroundState
     val selectedBg = AssetDataProvider.plateBackgrounds
         .find { it.id == bgState?.selectedBackgroundId }
         ?: AssetDataProvider.plateBackgrounds.first()
     val filteredDimensions = AssetDataProvider.plateDimensions.filter {
-        it.plateType == state.plateType
+        it.plateType == state.plateType && it.isFront == state.isFront
     }
 
     Column(modifier = Modifier.padding(top = 10.dp)) {
@@ -76,7 +75,8 @@ fun DimensionEditPanel(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.fillMaxSize()
         ) {
-            items(filteredDimensions) { option ->
+            items(items = filteredDimensions,
+                key = { it.id }) { option ->
                 val isSelected = currentSelectedId == option.id
 
                 DimensionItem(
