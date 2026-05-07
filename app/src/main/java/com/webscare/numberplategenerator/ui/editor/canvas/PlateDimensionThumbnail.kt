@@ -1,4 +1,4 @@
-package com.webscare.numberplategenerator.ui.editor.canva
+package com.webscare.numberplategenerator.ui.editor.canvas
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.aspectRatio

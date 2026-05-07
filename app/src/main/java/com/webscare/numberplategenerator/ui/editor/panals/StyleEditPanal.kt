@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -119,19 +120,20 @@ fun StyleToggleButton(
     isItalic: Boolean = false,
     isUnderline: Boolean = false,
     onClick: () -> Unit
-) {
+)
+{
+    val shape = RoundedCornerShape(16.dp)
     Row(
         modifier = modifier
             .background(
                 color = (if (isSelected) pink_color.copy(0.05f) else white_color),
-                shape = RoundedCornerShape(16.dp)
+                shape = shape
             )
-            .clickable { onClick() }
             .border(
                 width = 1.dp,
                 color = if (isSelected) pink_color else grey_color.copy(0.15f),
-                shape = RoundedCornerShape(16.dp)
-            )
+                shape = shape
+            ).clip(shape).clickable { onClick() }
 
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,

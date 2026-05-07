@@ -1,6 +1,7 @@
 package com.webscare.numberplategenerator.ui
 
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.webscare.numberplategenerator.R
@@ -36,7 +37,7 @@ class MainViewModel(
         EditorTab(EditorTabType.DIMENSION, "Dimensions", R.drawable.ic_ai_gen),
         EditorTab(EditorTabType.TEXT, "Text", R.drawable.ic_text),
         EditorTab(EditorTabType.STYLE, "Style", R.drawable.ic_ai_gen),
-        EditorTab(EditorTabType.BACKGROUND, "Background", R.drawable.ic_bg),
+        EditorTab(EditorTabType.HEADER, "Header", R.drawable.ic_bg),
         EditorTab(EditorTabType.FLAG, "Flag", R.drawable.ic_ai_gen),
         EditorTab(EditorTabType.STICKER, "Sticker", R.drawable.ic_ai_gen),
         EditorTab(EditorTabType.NAME, "Name", R.drawable.ic_ai_gen),
@@ -50,17 +51,59 @@ class MainViewModel(
     }
 
 
-
-
-
     fun onSearchQueryChange(newQuery: String) {
         _uiState.update { it.copy(searchQuery = newQuery) }
     }
 
+    fun onHeaderDropped(dropPositionInPlate: Offset, plateSize: Size) {
+        if (dropPositionInPlate == Offset.Zero) return
+
+        val sideThreshold = plateSize.width * 0.40f
+        val topThreshold = plateSize.height * 0.40f
+
+        val clampedX = dropPositionInPlate.x.coerceIn(0f, plateSize.width)
+        val clampedY = dropPositionInPlate.y.coerceIn(0f, plateSize.height)
+
+        val isInLeft = clampedX < sideThreshold
+        val isInRight = clampedX > (plateSize.width - sideThreshold)
+        val isInTop = clampedY < topThreshold
+
+        val newAlignment = when {
+            isInRight && isInTop -> {
+                when (_editorState.value.headerAlignment) {
+                    HeaderAlignment.RIGHT -> HeaderAlignment.TOP
+                    HeaderAlignment.TOP -> HeaderAlignment.RIGHT
+                    else -> HeaderAlignment.TOP
+                }
+            }
+            isInLeft && isInTop -> {
+                when (_editorState.value.headerAlignment) {
+                    HeaderAlignment.LEFT -> HeaderAlignment.TOP
+                    HeaderAlignment.TOP -> HeaderAlignment.LEFT
+                    else -> HeaderAlignment.TOP
+                }
+            }
+            isInRight -> HeaderAlignment.RIGHT
+            isInLeft -> HeaderAlignment.LEFT
+            isInTop -> HeaderAlignment.TOP
+            else -> _editorState.value.headerAlignment
+        }
+        println("🎯 DROP: x=$clampedX, width=${plateSize.width}, threshold=$sideThreshold, zone=$newAlignment")
+
+
+        _editorState.update {
+            it.copy(
+                headerAlignment = newAlignment,
+                headerDragOffset = Offset.Zero // RESET after drop
+            )
+        }
+    }
+
     fun updatePlateDimension(option: DimensionOption) {
         _editorState.update { currentState ->
-            val currentDimState = (currentState.toolStates[EditorTabType.DIMENSION] as? ToolState.DimensionState)
-                ?: ToolState.DimensionState()
+            val currentDimState =
+                (currentState.toolStates[EditorTabType.DIMENSION] as? ToolState.DimensionState)
+                    ?: ToolState.DimensionState()
 
             // Update specific slot based on current context
             val updatedDimState = when (currentState.plateType) {
@@ -71,6 +114,7 @@ class MainViewModel(
                         currentDimState.copy(carBackId = option.id)
                     }
                 }
+
                 PlateType.BIKE -> {
                     if (currentState.isFront) {
                         currentDimState.copy(bikeFrontId = option.id)
@@ -102,12 +146,19 @@ class MainViewModel(
     }
 
     fun resetHeaderOffset() {
-        _editorState.update { it.copy(headerDragOffset = Offset.Zero, isLongPressingHeader = false) }
+        _editorState.update {
+            it.copy(
+                headerDragOffset = Offset.Zero,
+                isLongPressingHeader = false
+            )
+        }
     }
+
     fun updateSide(isFront: Boolean) {
         _editorState.update { currentState ->
-            val dimState = (currentState.toolStates[EditorTabType.DIMENSION] as? ToolState.DimensionState)
-                ?: ToolState.DimensionState()
+            val dimState =
+                (currentState.toolStates[EditorTabType.DIMENSION] as? ToolState.DimensionState)
+                    ?: ToolState.DimensionState()
 
             currentState.copy(
                 isFront = isFront,
@@ -115,6 +166,7 @@ class MainViewModel(
             )
         }
     }
+
     fun onFilterSelected(id: String) {
         _uiState.update { it.copy(selectedFilterId = id) }
     }
@@ -127,8 +179,9 @@ class MainViewModel(
 
     fun onColorSelect(colorInt: Int) {
         _editorState.update { currentState ->
-            val currentStyle = (currentState.toolStates[EditorTabType.STYLE] as? ToolState.StyleState)
-                ?: ToolState.StyleState()
+            val currentStyle =
+                (currentState.toolStates[EditorTabType.STYLE] as? ToolState.StyleState)
+                    ?: ToolState.StyleState()
 
             val updatedStyle = currentStyle.copy(selectedColor = colorInt)
 
@@ -187,8 +240,9 @@ class MainViewModel(
 
     fun toggleBold() {
         _editorState.update { currentState ->
-            val currentStyle = (currentState.toolStates[EditorTabType.STYLE] as? ToolState.StyleState)
-                ?: ToolState.StyleState()
+            val currentStyle =
+                (currentState.toolStates[EditorTabType.STYLE] as? ToolState.StyleState)
+                    ?: ToolState.StyleState()
 
             val updatedStyle = currentStyle.copy(isBold = !currentStyle.isBold)
 
@@ -197,23 +251,26 @@ class MainViewModel(
             )
         }
     }
+
     fun onBackgroundSelect(bgId: String) {
         _editorState.update { currentState ->
-            val currentBgState = (currentState.toolStates[EditorTabType.BACKGROUND] as? ToolState.BackgroundState)
-                ?: ToolState.BackgroundState()
+            val currentBgState =
+                (currentState.toolStates[EditorTabType.HEADER] as? ToolState.BackgroundState)
+                    ?: ToolState.BackgroundState()
 
             val updatedBgState = currentBgState.copy(selectedBackgroundId = bgId)
 
             currentState.copy(
-                toolStates = currentState.toolStates + (EditorTabType.BACKGROUND to updatedBgState)
+                toolStates = currentState.toolStates + (EditorTabType.HEADER to updatedBgState)
             )
         }
     }
 
     fun toggleItalic() {
         _editorState.update { currentState ->
-            val currentStyle = (currentState.toolStates[EditorTabType.STYLE] as? ToolState.StyleState)
-                ?: ToolState.StyleState()
+            val currentStyle =
+                (currentState.toolStates[EditorTabType.STYLE] as? ToolState.StyleState)
+                    ?: ToolState.StyleState()
 
             val updatedStyle = currentStyle.copy(isItalic = !currentStyle.isItalic)
 
@@ -225,8 +282,9 @@ class MainViewModel(
 
     fun toggleUnderline() {
         _editorState.update { currentState ->
-            val currentStyle = (currentState.toolStates[EditorTabType.STYLE] as? ToolState.StyleState)
-                ?: ToolState.StyleState()
+            val currentStyle =
+                (currentState.toolStates[EditorTabType.STYLE] as? ToolState.StyleState)
+                    ?: ToolState.StyleState()
 
             val updatedStyle = currentStyle.copy(isUnderline = !currentStyle.isUnderline)
 
@@ -235,6 +293,7 @@ class MainViewModel(
             )
         }
     }
+
     fun onFlagSelect(id: String, resId: Int?) {
         val currentState = _editorState.value
         val newFlagState = (currentState.toolStates[EditorTabType.FLAG] as? ToolState.FlagState)
@@ -250,8 +309,9 @@ class MainViewModel(
 
     fun onStickerSelect(id: String, resId: Int?) {
         _editorState.update { currentState ->
-            val currentStickerState = (currentState.toolStates[EditorTabType.STICKER] as? ToolState.StickerState)
-                ?: ToolState.StickerState()
+            val currentStickerState =
+                (currentState.toolStates[EditorTabType.STICKER] as? ToolState.StickerState)
+                    ?: ToolState.StickerState()
 
             val updatedStickerState = currentStickerState.copy(
                 selectedStickerId = id,
@@ -264,10 +324,12 @@ class MainViewModel(
             )
         }
     }
+
     fun onStickerColorSelect(colorInt: Int) {
         _editorState.update { currentState ->
-            val currentStickerState = (currentState.toolStates[EditorTabType.STICKER] as? ToolState.StickerState)
-                ?: ToolState.StickerState()
+            val currentStickerState =
+                (currentState.toolStates[EditorTabType.STICKER] as? ToolState.StickerState)
+                    ?: ToolState.StickerState()
 
             val updatedStickerState = currentStickerState.copy(
                 stickerTint = colorInt // Naya color apply hoga
@@ -282,14 +344,15 @@ class MainViewModel(
     fun resetEditorState() {
         _editorState.update { currentState ->
             // 1. Sirf fonts ko preserve karein kyunki wo network/source se aate hain
-            val currentFonts = (currentState.toolStates[EditorTabType.TEXT] as? ToolState.TextState)?.fontOptions ?: emptyList()
+            val currentFonts =
+                (currentState.toolStates[EditorTabType.TEXT] as? ToolState.TextState)?.fontOptions
+                    ?: emptyList()
 
             // 2. Default state banayein
             val defaultState = EditorStates()
 
             // 3. Senior Approach: Hardcoding ki jagah Data Source se pehla valid item nikaalein
             // Hum filter kar rahe hain taake Car ke liye Car ki aur Bike ke liye Bike ki default dimension aaye
-
 
 
             val resetTextState = ToolState.TextState(
@@ -309,8 +372,9 @@ class MainViewModel(
 
     fun onOwnerNameChange(newName: String) {
         _editorState.update { currentState ->
-            val currentNameState = (currentState.toolStates[EditorTabType.NAME] as? ToolState.NameState)
-                ?: ToolState.NameState()
+            val currentNameState =
+                (currentState.toolStates[EditorTabType.NAME] as? ToolState.NameState)
+                    ?: ToolState.NameState()
 
             val updatedNameState = currentNameState.copy(ownerName = newName)
 
@@ -332,8 +396,9 @@ class MainViewModel(
                 }
 
                 _editorState.update { currentState ->
-                    val currentTextState = (currentState.toolStates[EditorTabType.TEXT] as? ToolState.TextState)
-                        ?: ToolState.TextState()
+                    val currentTextState =
+                        (currentState.toolStates[EditorTabType.TEXT] as? ToolState.TextState)
+                            ?: ToolState.TextState()
 
                     val updatedTextState = currentTextState.copy(
                         fontOptions = fonts,

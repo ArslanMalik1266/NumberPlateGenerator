@@ -10,6 +10,7 @@ data class EditorStates(
     val plateType: PlateType = PlateType.CAR,
     val plateText: String = "LEB-2847",
     val isLongPressingHeader: Boolean = false,
+    val headerAlignment: HeaderAlignment = HeaderAlignment.TOP,
     val headerDragOffset: Offset = Offset.Zero,
     val isFront: Boolean = true,
     val selectedTab: EditorTabType = EditorTabType.DIMENSION,
@@ -20,7 +21,7 @@ data class EditorStates(
         EditorTabType.NAME to ToolState.NameState(),
         EditorTabType.FLAG to ToolState.FlagState(),
         EditorTabType.STICKER to ToolState.StickerState(),
-        EditorTabType.BACKGROUND to ToolState.BackgroundState()
+        EditorTabType.HEADER to ToolState.BackgroundState()
     )
 )
 
@@ -74,6 +75,9 @@ sealed class ToolState {
 
 enum class PlateType {
     CAR, BIKE
+}
+enum class HeaderAlignment {
+    TOP, LEFT, RIGHT
 }
 
 data class PlateBackground(

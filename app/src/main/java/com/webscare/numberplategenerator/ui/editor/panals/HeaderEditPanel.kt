@@ -40,9 +40,9 @@ import com.webscare.numberplategenerator.utils.addPressEffect
 import org.koin.compose.viewmodel.koinActivityViewModel
 
 @Composable
-fun BackgroundEditPanel(viewModel: MainViewModel = koinActivityViewModel()) {
+fun HeaderEditPanel(viewModel: MainViewModel = koinActivityViewModel()) {
     val state by viewModel.editorState.collectAsState()
-    val bgState = state.toolStates[EditorTabType.BACKGROUND] as? ToolState.BackgroundState
+    val bgState = state.toolStates[EditorTabType.HEADER] as? ToolState.BackgroundState
         ?: ToolState.BackgroundState()
     val selectedBg = AssetDataProvider.plateBackgrounds.find { it.id == bgState.selectedBackgroundId }
         ?: AssetDataProvider.plateBackgrounds.first()
@@ -54,7 +54,7 @@ fun BackgroundEditPanel(viewModel: MainViewModel = koinActivityViewModel()) {
             .padding(top = 10.dp)
     ) {
         Text(
-            text = "PLATE BACKGROUND",
+            text = "HEADER BACKGROUND",
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold,
             color = grey_color

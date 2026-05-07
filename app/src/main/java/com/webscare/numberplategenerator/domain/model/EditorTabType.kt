@@ -4,7 +4,7 @@ enum class EditorTabType(val id: String) {
     DIMENSION("dimension"),
     TEXT("text"),
     STYLE("style"),
-    BACKGROUND("bg"),
+    HEADER("bg"),
     FLAG("flag"),
     STICKER("sticker"),
     NAME("name"),

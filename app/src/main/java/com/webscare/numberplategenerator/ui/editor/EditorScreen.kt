@@ -39,7 +39,8 @@ import androidx.compose.ui.unit.sp
 import com.webscare.numberplategenerator.R
 import com.webscare.numberplategenerator.domain.model.EditorTabType
 import com.webscare.numberplategenerator.ui.MainViewModel
-import com.webscare.numberplategenerator.ui.editor.panals.BackgroundEditPanel
+import com.webscare.numberplategenerator.ui.editor.canvas.PlateCanvasPreview
+import com.webscare.numberplategenerator.ui.editor.panals.HeaderEditPanel
 import com.webscare.numberplategenerator.ui.editor.panals.DimensionEditPanel
 import com.webscare.numberplategenerator.ui.editor.panals.FlagEditPanel
 import com.webscare.numberplategenerator.ui.editor.panals.NameEditPanel
@@ -52,7 +53,6 @@ import com.webscare.numberplategenerator.ui.theme.grey_color
 import com.webscare.numberplategenerator.ui.theme.pink_color
 import com.webscare.numberplategenerator.ui.theme.white_color
 import com.webscare.numberplategenerator.utils.addPressEffect
-import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.viewmodel.koinActivityViewModel
 
 @Composable
@@ -113,6 +113,9 @@ fun EditorScreen(
             },
             onHeaderReset = {
                 viewModel.resetHeaderOffset()
+            },
+            onHeaderDropped = { finalTouchOffset, plateSize ->
+                viewModel.onHeaderDropped(finalTouchOffset, plateSize)
             }
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -136,8 +139,8 @@ fun EditorScreen(
                     StyleEditPanel(viewModel = viewModel)
                 }
 
-                EditorTabType.BACKGROUND -> {
-                    BackgroundEditPanel(viewModel = viewModel)
+                EditorTabType.HEADER -> {
+                    HeaderEditPanel(viewModel = viewModel)
                 }
 
                 EditorTabType.FLAG -> {
